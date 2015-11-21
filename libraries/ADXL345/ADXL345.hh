@@ -48,6 +48,103 @@
  */
 class ADXL345 : private TWI::Driver {
 public:
+
+  /**
+   * Construct ADXL345 driver with normal or alternative address (pp. 18).
+   * @param[in] use_alt_address.
+   */
+  ADXL345(bool use_alt_address = false) :
+    TWI::Driver(use_alt_address ? 0x53 : 0x1d)
+  {}
+
+  /**
+   * Start interaction with device. Set full resolution and 16G.
+   * Single and double tap detection in XYZ-axis. Activity/inactivity
+   * (5 seconds), and free fall detect. Power control with auto-sleep
+   * and wakeup at 2 Hz. Interrupts enabled. Measurement turned on.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool begin();
+
+  /**
+   * Stop sequence of interaction with device. Turn off measurement.
+   * @return true(1) if successful otherwise false(0)
+   */
+  bool end();
+
+  /**
+   * Accelerometer offset calibration structure.
+   */
+  struct offset_t {
+    int8_t x;
+    int8_t y;
+    int8_t z;
+  };
+
+  /**
+   * Calibrate accelerometer with given offsets.
+   * @param[in] x axis offset.
+   * @param[in] y axis offset.
+   * @param[in] z axis offset.
+   */
+  void calibrate(int8_t x, int8_t y, int8_t z)
+    __attribute__((always_inline))
+  {
+    offset_t ofs;
+    ofs.x = x;
+    ofs.y = y;
+    ofs.z = z;
+    write(OFS, &ofs, sizeof(ofs));
+  }
+
+  /**
+   * Calibrate accelerometer by resetting offset and
+   * using the current accelerometer values as offset.
+   * (-sample/4) according to ADXL345 documentation.
+   */
+  void calibrate();
+
+  /**
+   * Accelerometer sample data structure (axis x, y, z).
+   */
+  struct sample_t {
+    int x;
+    int y;
+    int z;
+  };
+
+  /**
+   * Sample accelerometer. Return sample is given data structure
+   * @param[in] s sample storage.
+   */
+  void sample(sample_t& s)
+    __attribute__((always_inline))
+  {
+    read(DATA, &s, sizeof(s));
+  }
+
+  /**
+   * Register INT_ENABLE/INT_MAP/INT_SOURCE bitfields.
+   */
+  enum {
+    DATA_READY = 7,		//!< Data ready interrupt enable/map/source.
+    SINGLE_TAP = 6, 		//!< Single tap.
+    DOUBLE_TAP = 5,		//!< Double tap.
+    ACT = 4,			//!< Activity.
+    INACT = 3, 			//!< Inactivity.
+    FREE_FALL = 2,		//!< Free fall.
+    WATERMARK = 1,		//!< Watermark.
+    OVERRUN = 0			//!< Overrun interrupt enable/map/source.
+  } __attribute__((packed));
+
+  /**
+   * Check for activity. Returns a bitset with current activity.
+   * Ignore WATERMARK and OVERRUN.
+   * @return activities
+   */
+  uint8_t is_activity();
+
+protected:
   /**
    * Registers Map (See tab. 19, pp. 23).
    */
@@ -145,20 +242,6 @@ public:
   };
 
   /**
-   * Register INT_ENABLE/INT_MAP/INT_SOURCE bitfields.
-   */
-  enum {
-    DATA_READY = 7,		//!< Data ready interrupt enable/map/source.
-    SINGLE_TAP = 6, 		//!< Single tap.
-    DOUBLE_TAP = 5,		//!< Double tap.
-    ACT = 4,			//!< Activity.
-    INACT = 3, 			//!< Inactivity.
-    FREE_FALL = 2,		//!< Free fall.
-    WATERMARK = 1,		//!< Watermark.
-    OVERRUN = 0			//!< Overrun interrupt enable/map/source.
-  } __attribute__((packed));
-
-  /**
    * Register DATA_FORMAT bitfields.
    */
   enum {
@@ -244,87 +327,6 @@ public:
     Y = 2,
     Z = 1
   } __attribute__((packed));
-
-  /**
-   * Construct ADXL345 driver with normal or alternative address (pp. 18).
-   * @param[in] use_alt_address.
-   */
-  ADXL345(bool use_alt_address = false) :
-    TWI::Driver(use_alt_address ? 0x53 : 0x1d)
-  {}
-
-  /**
-   * Start interaction with device. Set full resolution and 16G.
-   * Single and double tap detection in XYZ-axis. Activity/inactivity
-   * (5 seconds), and free fall detect. Power control with auto-sleep
-   * and wakeup at 2 Hz. Interrupts enabled. Measurement turned on.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool begin();
-
-  /**
-   * Stop sequence of interaction with device. Turn off measurement.
-   * @return true(1) if successful otherwise false(0)
-   */
-  bool end();
-
-  /**
-   * Accelerometer offset calibration structure.
-   */
-  struct offset_t {
-    int8_t x;
-    int8_t y;
-    int8_t z;
-  };
-
-  /**
-   * Calibrate accelerometer with given offsets.
-   * @param[in] x axis offset.
-   * @param[in] y axis offset.
-   * @param[in] z axis offset.
-   */
-  void calibrate(int8_t x, int8_t y, int8_t z)
-    __attribute__((always_inline))
-  {
-    offset_t ofs;
-    ofs.x = x;
-    ofs.y = y;
-    ofs.z = z;
-    write(OFS, &ofs, sizeof(ofs));
-  }
-
-  /**
-   * Calibrate accelerometer by resetting offset and
-   * using the current accelerometer values as offset.
-   * (-sample/4) according to ADXL345 documentation.
-   */
-  void calibrate();
-
-  /**
-   * Accelerometer sample data structure (axis x, y, z).
-   */
-  struct sample_t {
-    int x;
-    int y;
-    int z;
-  };
-
-  /**
-   * Sample accelerometer. Return sample is given data structure
-   * @param[in] s sample storage.
-   */
-  void sample(sample_t& s)
-    __attribute__((always_inline))
-  {
-    read(DATA, &s, sizeof(s));
-  }
-
-  /**
-   * Check for activity. Returns a bitset with current activity.
-   * Ignore WATERMARK and OVERRUN.
-   * @return activities
-   */
-  uint8_t is_activity();
 };
 
 /**

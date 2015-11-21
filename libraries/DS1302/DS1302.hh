@@ -148,7 +148,7 @@ public:
    */
   void write_ram(void* buf, size_t size);
 
-private:
+protected:
   /** Write protect register. */
   static const uint8_t WP = 0x07;
 

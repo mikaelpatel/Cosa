@@ -29,9 +29,6 @@
 Nucleo::Semaphore io(1);
 
 class Echo : public Nucleo::Thread {
-private:
-  str_P m_name;
-  uint16_t m_ms;
 public:
   // Construct echo thread
   Echo(uint16_t ms) : Thread(), m_name(NULL), m_ms(ms) {};
@@ -46,6 +43,10 @@ public:
   void fn0(uint16_t& nr)  __attribute__((noinline));
   void fn1(uint16_t& nr)  __attribute__((noinline));
   void fn2(uint16_t& nr)  __attribute__((noinline));
+
+private:
+  str_P m_name;
+  uint16_t m_ms;
 };
 
 void

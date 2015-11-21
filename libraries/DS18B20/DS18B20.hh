@@ -54,26 +54,26 @@ public:
   class Search : public OWI::Search {
   public:
     /**
-     * Construct an alarm search iterator for the thermometer
-     * device family.
+     * Construct an alarm search iterator for the thermometer device
+     * family.
      * @param[in] owi one-wire pin to search.
      */
     Search(OWI* owi) : OWI::Search(owi, FAMILY_CODE) {}
 
     /**
-     * Get the next thermometer with active alarm since latest
-     * convert request. The temperature value that triggered the alarm
-     * is read.
+     * Get the next thermometer with active alarm since latest convert
+     * request. The temperature value that triggered the alarm is
+     * read.
      * @return pointer to driver or null(0).
      */
     DS18B20* next();
   };
 
   /**
-   * Construct a DS18B20 device connected to the given 1-Wire bus.
-   * Use connect() to lookup, set power supply mode and
-   * configuration. Alternatively use read_power_supply() and
-   * read_scratchpad() directly if rom address is given.
+   * Construct a DS18B20 device connected to the given 1-Wire bus. Use
+   * connect() to lookup, set power supply mode and configuration.
+   * Alternatively use read_power_supply() and read_scratchpad()
+   * directly if rom address is given.
    * @param[in] pin one wire bus pin.
    * @param[in] name of device.
    */
@@ -92,7 +92,7 @@ public:
    * is given.
    * @param[in] pin one wire bus pin.
    * @param[in] rom device identity.
-   * @param[in] name of device. In program memory (default null).
+   * @param[in] name of device. In program memory (default NULL).
    */
   DS18B20(OWI* pin, const uint8_t* rom, const char* name = NULL) :
     OWI::Driver(pin, rom, name),
@@ -211,9 +211,9 @@ public:
   bool read_scratchpad(bool flag = true);
 
   /**
-   * Copy device scratchpad triggers and configuration data
-   * to device EEPROM. An internal delay is issued to allow the data
-   * to be written.
+   * Copy device scratchpad triggers and configuration data to device
+   * EEPROM. An internal delay is issued to allow the data to be
+   * written.
    * @return true(1) if successful otherwise false(0).
    */
   bool copy_scratchpad();
@@ -241,7 +241,7 @@ public:
    */
   static void print(IOStream& outs, int16_t temp);
 
-private:
+protected:
   /**
    * DS18B20 Function Commands (Table 3, pp. 12).
    */
@@ -287,9 +287,8 @@ private:
   static const uint16_t MIN_COPY_PULLUP = 10;
 
   /**
-   * Turn power off if the device is parasite powered. Call
-   * connect() or read_power_supply() to set the parasite mode for the
-   * device.
+   * Turn power off if the device is parasite powered. Call connect()
+   * or read_power_supply() to set the parasite mode for the device.
    */
   void power_off()
     __attribute__((always_inline))

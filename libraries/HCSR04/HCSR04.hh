@@ -28,10 +28,9 @@
 #include "Cosa/Watchdog.hh"
 
 /**
- * Device driver for Ultrasonic range module HC-SR04. Subclass
- * and implement the change event handler, on_change(). Attach
- * to watchdog timeout queue to perform periodic read and check
- * of change.
+ * Device driver for Ultrasonic range module HC-SR04. Subclass and
+ * implement the change event handler, on_change(). Attach to a
+ * scheduler to perform periodic read and check of change.
  *
  * @section Circuit
  * @code
@@ -53,11 +52,13 @@
 class HCSR04 : public Periodic {
 public:
   /**
-   * Construct connection to a DHT11 device on given in/output-pin.
+   * Construct connection to a HC-SR04 device on given in/output-pin.
    * @param[in] trigger trigger pin.
    * @param[in] echo echo pin.
    */
-  HCSR04(Job::Scheduler* scheduler, Board::DigitalPin trigger, Board::DigitalPin echo) :
+  HCSR04(Job::Scheduler* scheduler,
+	 Board::DigitalPin trigger,
+	 Board::DigitalPin echo) :
     Periodic(scheduler, 250),
     m_trigger(trigger),
     m_echo(echo),
@@ -124,9 +125,8 @@ private:
 
   /**
    * @override{Event::Handler}
-   * Default device event handler function. Attach to watchdog
-   * timer queue, Watchdog::attach(), to allow perodic reading
-   * and check if the distance has changed.
+   * Default device event handler function. Attach to scheduler to
+   * allow perodic reading and check if the distance has changed.
    * @param[in] type the type of event.
    * @param[in] value the event value.
    */

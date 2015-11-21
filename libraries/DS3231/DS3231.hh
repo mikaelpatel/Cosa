@@ -70,9 +70,9 @@ public:
     };
 
     /**
-     * Convert alarm time to binary representation (from BCD).
-     * Apply after reading from device and before any calculation.
-     * Note that output stream operator requires BCD form.
+     * Convert alarm time to binary representation (from BCD). Apply
+     * after reading from device and before any calculation. Note that
+     * output stream operator requires BCD form.
      */
     void to_binary()
     {
@@ -80,9 +80,9 @@ public:
     }
 
     /**
-     * Convert alarm time to BCD representation (from binary).
-     * Apply after setting new value and writing to the device.
-     * Note that output stream operator requires BCD form.
+     * Convert alarm time to BCD representation (from binary). Apply
+     * after setting new value and writing to the device. Note that
+     * output stream operator requires BCD form.
      */
     void to_bcd()
     {
@@ -109,9 +109,9 @@ public:
     };
 
     /**
-     * Convert alarm time to binary representation (from BCD).
-     * Apply after reading from device and before any calculation.
-     * Note that output stream operator requires BCD form.
+     * Convert alarm time to binary representation (from BCD). Apply
+     * after reading from device and before any calculation. Note that
+     * output stream operator requires BCD form.
      */
     void to_binary()
     {
@@ -119,9 +119,9 @@ public:
     }
 
     /**
-     * Convert alarm time to BCD representation (from binary).
-     * Apply after setting new value and writing to the device.
-     * Note that output stream operator requires BCD form.
+     * Convert alarm time to BCD representation (from binary). Apply
+     * after setting new value and writing to the device. Note that
+     * output stream operator requires BCD form.
      */
     void to_bcd()
     {
@@ -289,7 +289,6 @@ public:
    * @return temperature.
    */
   int16_t temperature();
-
 
   /**
    * Enable/disable square wave output (1 Hz). Returns true(1) if successful

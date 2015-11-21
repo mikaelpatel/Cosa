@@ -196,7 +196,7 @@ public:
     return (m_recv_status.lqi);
   }
 
-private:
+protected:
   /**
    * Transaction header (pp. 29). Note 16-bit configuration variables are
    * read/written in big endian order (MSB first) and require swapping.
