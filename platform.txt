@@ -56,10 +56,10 @@ compiler.size.cmd=avr-size
 build.extra_flags="-I{build.path}"
 
 # These can be overridden in platform.local.txt
-compiler.c.extra_flags=-Wextra -flto
-compiler.c.elf.extra_flags=-w -Wl,-relax -flto
+compiler.c.extra_flags=-Wextra
+compiler.c.elf.extra_flags=-w
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Woverloaded-virtual -Wextra -flto -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
+compiler.cpp.extra_flags=-Woverloaded-virtual -Wextra -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
