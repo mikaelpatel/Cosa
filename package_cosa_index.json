@@ -12,6 +12,62 @@
         {
           "name": "Cosa",
           "architecture": "avr",
+          "version": "1.1.1",
+          "category": "Cosa",
+          "help": {
+            "online": "https://dl.dropboxusercontent.com/u/993383/Cosa/doc/html/index.html"
+          },
+          "url": "https://github.com/mikaelpatel/Cosa/archive/v1.1.1.zip",
+	  "archiveFileName": "Cosa-1.1.1.zip",
+	  "checksum": "SHA-256:8ce3d8a0c2c55d7ae8fec24ff4c503800849f06ffed9c98283448e961fe07387",
+	  "size": "2068935",
+          "boards": [
+	    {"name" : "AdaFruit ATmega32U4"},
+	    {"name" : "Anarduino MiniWireless"},
+	    {"name" : "Arduino Diecimila"},
+	    {"name" : "Arduino Duemilanove"},
+	    {"name" : "Arduino Leonardo"},
+	    {"name" : "Arduino Mega 1280"},
+	    {"name" : "Arduino Mega 2560"},
+	    {"name" : "Arduino Micro"},
+	    {"name" : "Arduino Nano"},
+	    {"name" : "Arduino Pro Micro"},
+	    {"name" : "Arduino Pro Mini"},
+	    {"name" : "Arduino Uno"},
+	    {"name" : "ATtinyX4"},
+	    {"name" : "ATtinyX5"},
+	    {"name" : "ATtinyX61"},
+	    {"name" : "ATmega328"},
+	    {"name" : "ATmega1284"},
+	    {"name" : "ITEAD Studio IBoard"},
+	    {"name" : "LilyPad Arduino"},
+	    {"name" : "LilyPad Arduino USB"},
+	    {"name" : "LowPowerLab Moteino"},
+	    {"name" : "LowPowerLab Moteino Mega"},
+	    {"name" : "Pinoccio Scout"},
+	    {"name" : "Microduino-Core"},
+	    {"name" : "Microduino-Core32u4"},
+	    {"name" : "Microduino-Core+"},
+	    {"name" : "PJRC Teensy 2.0"},
+	    {"name" : "PJRC Teensy++ 2.0"},
+	    {"name" : "Wicked Device WildFire V3"}
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "avr-gcc",
+              "version": "4.9.2-arduino2"
+            },
+            {
+              "packager": "arduino",
+              "name": "avrdude",
+              "version": "6.1-arduino2"
+            }
+          ]
+        },
+        {
+          "name": "Cosa",
+          "architecture": "avr",
           "version": "1.1.0",
           "category": "Cosa",
           "help": {
