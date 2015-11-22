@@ -1,8 +1,8 @@
-# @file platform.txt-classic
-# @version 1.0
+# @file platform.txt
+# @version 2.0
 #
 # @section License
-# Copyright (C) 2014, Mikael Patel
+# Copyright (C) 2014-2015, Mikael Patel
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,13 +27,14 @@
 # This file is part of the Arduino Che Cosa project.
 
 name=Cosa AVR Boards
-version=1.0
+version=2.0
 
 # AVR compile variables
 # ---------------------
 
 # Default "compiler.path" is correct, change only if you want to overidde the initial value
-compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
+# compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
+compiler.path={runtime.tools.avr-gcc.path}/bin/
 compiler.c.cmd=avr-gcc
 compiler.c.flags=-c -g -Os -Wall -ffunction-sections -fdata-sections -MMD
 compiler.c.elf.flags=-Os -Wl,--gc-sections
@@ -42,6 +43,7 @@ compiler.S.flags=-c -g -assembler-with-cpp
 compiler.cpp.cmd=avr-g++
 compiler.cpp.flags=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD
 compiler.ar.cmd=avr-ar
+# compiler.ar.cmd=avr-gcc-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=avr-objcopy
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
@@ -51,13 +53,13 @@ compiler.ldflags=
 compiler.size.cmd=avr-size
 
 # This can be overridden in boards.txt
-build.extra_flags=
+build.extra_flags="-I{build.path}"
 
 # These can be overridden in platform.local.txt
-compiler.c.extra_flags=-Wextra -flto
-compiler.c.elf.extra_flags=-w -Wl,-relax -flto
+compiler.c.extra_flags=-Wextra
+compiler.c.elf.extra_flags=-w
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=-Wextra -flto -std=gnu++11 -felide-constructors -mcall-prologues
+compiler.cpp.extra_flags=-Woverloaded-virtual -Wextra -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
@@ -95,8 +97,13 @@ recipe.size.regex.eeprom=^(?:\.eeprom)\s+([0-9]+).*
 # AVR Uploader/Programmers tools
 # ------------------------------
 
-tools.avrdude.cmd.path={runtime.ide.path}/hardware/tools/avr/bin/avrdude
-tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
+tools.avrdude.path={runtime.tools.avrdude.path}
+tools.avrdude.cmd.path={path}/bin/avrdude
+# tools.avrdude.config.path={path}/etc/avrdude.conf
+tools.avrdude.config.path={runtime.platform.path}/build/avrdude.conf
+
+# tools.avrdude.cmd.path={runtime.ide.path}/hardware/tools/avr/bin/avrdude
+# tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
 
 tools.avrdude.upload.params.verbose=-v -v -v -v
 tools.avrdude.upload.params.quiet=-q -q
@@ -119,3 +126,19 @@ tools.avrdude.bootloader.pattern="{cmd.path}" "-C{config.path}" {bootloader.verb
 # - from numeric vendor ID, set to Unknown otherwise
 build.usb_manufacturer=
 build.usb_flags=-DUSB_VID={build.vid} -DUSB_PID={build.pid} '-DUSB_MANUFACTURER={build.usb_manufacturer}' '-DUSB_PRODUCT={build.usb_product}'
+
+# ctags
+# ------------------------------
+tools.ctags.path={runtime.tools.ctags.path}
+tools.ctags.cmd.path={path}/ctags
+tools.ctags.pattern="{cmd.path}" -u --language-force=c++ -f - --c++-kinds=svpf --fields=KSTtzns "{source_file}"
+
+# additional entries
+tools.avrdude.path={runtime.tools.avrdude.path}
+
+preproc.includes.flags=-w -x c++ -M -MG -MP -mmcu={build.mcu}
+recipe.preproc.includes="{compiler.path}{compiler.cpp.cmd}" {preproc.includes.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}"
+
+preproc.macros.flags=-w -x c++ -E -CC -mmcu={build.mcu}
+preproc.macros.compatibility_flags={build.mbed_api_include} {build.nRF51822_api_include} {build.ble_api_include} {compiler.libsam.c.flags} {compiler.arm.cmsis.path} {build.variant_system_include}
+recipe.preproc.macros="{compiler.path}{compiler.cpp.cmd}" {compiler.cpreprocessor.flags} {compiler.cpp.flags} {preproc.macros.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {preproc.macros.compatibility_flags} {includes} "{source_file}"
