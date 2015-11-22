@@ -399,8 +399,8 @@ ifndef OBJDUMP_NAME
 endif
 
 ifndef AR_NAME
-  # AR_NAME = avr-ar
-  AR_NAME = avr-gcc-ar
+  AR_NAME = avr-ar
+  # AR_NAME = avr-gcc-ar
 endif
 
 ifndef SIZE_NAME
