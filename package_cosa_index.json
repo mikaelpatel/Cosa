@@ -56,12 +56,12 @@
             {
               "packager": "arduino",
               "name": "avr-gcc",
-              "version": "4.8.1-arduino5"
+              "version": "4.9.2-arduino2"
             },
             {
               "packager": "arduino",
               "name": "avrdude",
-              "version": "6.0.1-arduino5"
+              "version": "6.1-arduino2"
             }
           ]
         },
