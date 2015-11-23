@@ -659,8 +659,10 @@ else
 endif
 
 ifndef ARD_UTIL
-  ARD_UTIL := $(shell which ard-util 2> /dev/null)
-  ifndef ARD_UTIL
+  ARD_UTIL_ALT := $(shell which ard-util 2> /dev/null)
+  ifdef ARD_UTIL_ALT
+    ARD_UTIL = $(ARD_UTIL_ALT)
+  else
     # Same level as *.mk in bin directory when checked out from git or
     # in $PATH when packaged
     ARD_UTIL = $(ARDMK_DIR)/bin/ard-util
