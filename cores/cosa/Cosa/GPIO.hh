@@ -217,9 +217,15 @@ public:
   {
     volatile uint8_t* port = PORT(pin);
     const uint8_t mask = MASK(pin);
-#if ARDUINO > 150
-    // Synchronized not needed when constant values
+#if (ARDUINO > 150)
+    // Synchronized not needed when constant values (and lower ports)
+#if defined(PORTH)
+    if (((int) port < PORTH)
+	&& __builtin_constant_p(pin)
+	&& __builtin_constant_p(value)) {
+#else
     if (__builtin_constant_p(pin) && __builtin_constant_p(value)) {
+#endif
       if (value) {
 	*port |= mask;
       }
