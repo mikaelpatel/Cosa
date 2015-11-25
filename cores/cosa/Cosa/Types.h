@@ -226,6 +226,12 @@ strcmp_P(const char *s1, str_P s2)
   return (strcmp_P(s1, (const char*) s2));
 }
 
+inline int
+strncmp_P(const char *s1, str_P s2, size_t n)
+{
+  return (strncmp_P(s1, (const char*) s2, n));
+}
+
 inline char*
 strcpy_P(char* s1, str_P s2)
 {

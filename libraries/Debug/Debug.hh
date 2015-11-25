@@ -32,15 +32,16 @@ extern class Debug debug;
  *
  * @section Configuration
  * Define to remove corresponding command:
- *   COSA_DEBUG_NO_EXIT
- *   COSA_DEBUG_NO_WHERE
- *   COSA_DEBUG_NO_PRINT_VARIABLES
+ *   COSA_DEBUG_NO_BACKTRACE
+ *   COSA_DEBUG_NO_HELP
+ *   COSA_DEBUG_NO_LOOKUP_VARIABLES
+ *   COSA_DEBUG_NO_MEMORY_USAGE
  *   COSA_DEBUG_NO_PRINT_DATA
  *   COSA_DEBUG_NO_PRINT_HEAP
  *   COSA_DEBUG_NO_PRINT_STACK
- *   COSA_DEBUG_NO_MEMORY_USAGE
- *   COSA_DEBUG_NO_HELP
- *   COSA_DEBUG_NO_LOOKUP_VARIABLES
+ *   COSA_DEBUG_NO_PRINT_VARIABLES
+ *   COSA_DEBUG_NO_QUIT
+ *   COSA_DEBUG_NO_WHERE
  * May be used to reduce memory footprint and allow debugging with
  * limited resources.
  */
@@ -187,11 +188,19 @@ protected:
 	   const char* func = NULL,
 	   str_P expr = NULL);
 
-#if !defined(COSA_DEBUG_NO_EXIT)
+#if !defined(COSA_DEBUG_NO_BACKTRACE)
   /**
-   * Stop the sketch.
+   * Print backtrace.
+   * @param[in] func debug entry function.
    */
-  void do_exit();
+  void do_backtrace(const char* func);
+#endif
+
+#if !defined(COSA_DEBUG_NO_HELP)
+  /**
+   * Print list of commands and short description.
+   */
+  void do_help();
 #endif
 
 #if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
@@ -203,19 +212,12 @@ protected:
   bool do_lookup_variables(const char* name);
 #endif
 
-#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
+#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
   /**
-   * Print registered variables in format:
-   * @code
-   * REG:FUNC:VAR@REF=VAL
-   * REG:FUNC:VAR@REF[SIZE]:HEX
-   * @endcode
-   * where REG is the stack address of register item for the variable VAR.
-   * FUNC is the name of the function where registered. REF is the
-   * address of the variables value and VAL is the value. If the value
-   * is larger than int the value is printed in HEX format.
+   * Print memory usage statistics with size of data segment, heap,
+   * stack and number of free bytes.
    */
-  void do_print_variables();
+  void do_memory_usage(int marker);
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_DATA)
@@ -239,19 +241,26 @@ protected:
   void do_print_stack(int marker);
 #endif
 
-#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
+#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
   /**
-   * Print memory usage statistics with size of data segment, heap,
-   * stack and number of free bytes.
+   * Print registered variables in format:
+   * @code
+   * REG:FUNC:VAR@REF=VAL
+   * REG:FUNC:VAR@REF[SIZE]:HEX
+   * @endcode
+   * where REG is the stack address of register item for the variable VAR.
+   * FUNC is the name of the function where registered. REF is the
+   * address of the variables value and VAL is the value. If the value
+   * is larger than int the value is printed in HEX format.
    */
-  void do_memory_usage(int marker);
+  void do_print_variables();
 #endif
 
-#if !defined(COSA_DEBUG_NO_HELP)
+#if !defined(COSA_DEBUG_NO_QUIT)
   /**
-   * Print list of commands and short description.
+   * Stop the sketch.
    */
-  void do_help();
+  void do_quit();
 #endif
 
   friend class Variable;

@@ -103,52 +103,60 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
     if (len == 0) continue;
     buf[len] = 0;
 
-    if (!strcmp_P(buf, PSTR("go"))) return;
+    if (!strncmp_P(buf, PSTR("go"), len)) return;
 
-#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
-    if (!strcmp_P(buf, PSTR("variables"))) {
-      do_print_variables();
+#if !defined(COSA_DEBUG_NO_BACKTRACE)
+    if (!strncmp_P(buf, PSTR("backtrace"), len)) {
+      printf(PSTR("%p:%s\n"), &marker, func);
+      do_backtrace(func);
       continue;
     }
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_DATA)
-    if (!strcmp_P(buf, PSTR("data"))) {
+    if (!strncmp_P(buf, PSTR("data"), len)) {
       do_print_data();
       continue;
     }
 #endif
 
 #if !defined(COSA_DEBUG_NO_PRINT_HEAP)
-    if (!strcmp_P(buf, PSTR("heap"))) {
+    if (!strncmp_P(buf, PSTR("heap"), len)) {
       do_print_heap();
       continue;
     }
 #endif
 
-#if !defined(COSA_DEBUG_NO_PRINT_STACK)
-    if (!strcmp_P(buf, PSTR("stack"))) {
-      do_print_stack((int) &marker);
-      continue;
-    }
-#endif
-
-#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
-    if (!strcmp_P(buf, PSTR("memory"))) {
-      do_memory_usage((int) &marker);
-      continue;
-    }
-#endif
-
 #if !defined(COSA_DEBUG_NO_HELP)
-    if (!strcmp_P(buf, PSTR("help"))) {
+    if (!strncmp_P(buf, PSTR("help"), len)) {
       do_help();
       continue;
     }
 #endif
 
-#if !defined(COSA_DEBUG_NO_EXIT)
-    if (!strcmp_P(buf, PSTR("exit"))) {
+#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
+    if (!strncmp_P(buf, PSTR("memory"), len)) {
+      do_memory_usage((int) &marker);
+      continue;
+    }
+#endif
+
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
+    if (!strncmp_P(buf, PSTR("stack"), len)) {
+      do_print_stack((int) &marker);
+      continue;
+    }
+#endif
+
+#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
+    if (!strncmp_P(buf, PSTR("variables"), len)) {
+      do_print_variables();
+      continue;
+    }
+#endif
+
+#if !defined(COSA_DEBUG_NO_QUIT)
+    if (!strncmp_P(buf, PSTR("quit"), len)) {
       print(EXITCHARACTER);
       flush();
       exit(0);
@@ -156,7 +164,7 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
 #endif
 
 #if !defined(COSA_DEBUG_NO_WHERE)
-    if (!strcmp_P(buf, PSTR("where"))) {
+    if (!strncmp_P(buf, PSTR("where"), len)) {
       printf(PSTR("%s:%d:%s\n"), file, line, func);
       continue;
     }
@@ -174,6 +182,57 @@ Debug::run(const char* file, int line, const char* func, str_P expr)
   }
 }
 
+#if !defined(COSA_DEBUG_NO_BACKTRACE)
+void
+Debug::do_backtrace(const char* func)
+{
+  for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) {
+    if (func != vp->m_func) {
+      func = vp->m_func;
+      printf(PSTR("%p:%s\n"), vp, vp->m_func);
+    }
+  }
+}
+#endif
+
+#if !defined(COSA_DEBUG_NO_HELP)
+void
+Debug::do_help()
+{
+  static const char help[] PROGMEM =
+#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
+    "?VARIABLE -- print variable(s)\n"
+#endif
+#if !defined(COSA_DEBUG_NO_BACKTRACE)
+    "backtrace -- print call stack\n"
+#endif
+#if !defined(COSA_DEBUG_NO_PRINT_DATA)
+    "data -- print data\n"
+#endif
+    "go -- return to sketch\n"
+#if !defined(COSA_DEBUG_NO_PRINT_HEAP)
+    "heap -- print heap\n"
+#endif
+#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
+    "memory -- print memory usage\n"
+#endif
+#if !defined(COSA_DEBUG_NO_QUIT)
+    "quit -- exit sketch\n"
+#endif
+#if !defined(COSA_DEBUG_NO_PRINT_STACK)
+    "stack -- print stack\n"
+#endif
+#if !defined(COSA_DEBUG_NO_PRINT_REGISTER)
+    "variables -- print variables\n"
+#endif
+#if !defined(COSA_DEBUG_NO_WHERE)
+    "where -- location in source code\n"
+#endif
+    ;
+  print((str_P) help);
+}
+#endif
+
 #if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
 bool
 Debug::do_lookup_variables(const char* name)
@@ -189,11 +248,16 @@ Debug::do_lookup_variables(const char* name)
 }
 #endif
 
-#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
+#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
 void
-Debug::do_print_variables()
+Debug::do_memory_usage(int marker)
 {
-  for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) vp->print();
+  int HEAPEND = (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+  printf(PSTR("data=%d,heap=%d,stack=%d,free=%d\n"),
+	 DATASIZE,
+	 HEAPEND - (int) &__heap_start,
+	 RAMEND - marker + 1,
+	 marker - HEAPEND);
 }
 #endif
 
@@ -227,52 +291,13 @@ Debug::do_print_stack(int marker)
 }
 #endif
 
-#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
+#if !defined(COSA_DEBUG_NO_PRINT_VARIABLES)
 void
-Debug::do_memory_usage(int marker)
+Debug::do_print_variables()
 {
-  int HEAPEND = (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-  printf(PSTR("data=%d,heap=%d,stack=%d,free=%d\n"),
-	 DATASIZE,
-	 HEAPEND - (int) &__heap_start,
-	 RAMEND - marker + 1,
-	 marker - HEAPEND);
+  for (Variable* vp = m_var; vp != NULL; vp = vp->m_next) vp->print();
 }
 #endif
-
-#if !defined(COSA_DEBUG_NO_HELP)
-void
-Debug::do_help()
-{
-  static const char help[] PROGMEM =
-#if !defined(COSA_DEBUG_NO_LOOKUP_VARIABLES)
-    "?VARIABLE -- print variable(s)\n"
-#endif
-#if !defined(COSA_DEBUG_NO_PRINT_DATA)
-    "data -- print data\n"
-#endif
-#if !defined(COSA_DEBUG_NO_EXIT)
-    "exit -- exit sketch\n"
-#endif
-    "go -- return to sketch\n"
-#if !defined(COSA_DEBUG_NO_PRINT_HEAP)
-    "heap -- print heap\n"
-#endif
-#if !defined(COSA_DEBUG_NO_MEMORY_USAGE)
-    "memory -- print memory usage\n"
-#endif
-#if !defined(COSA_DEBUG_NO_PRINT_STACK)
-    "stack -- print stack\n"
-#endif
-#if !defined(COSA_DEBUG_NO_PRINT_REGISTER)
-    "variables -- print variables\n"
-#endif
-#if !defined(COSA_DEBUG_NO_WHERE)
-    "where -- location in source code\n"
-#endif
-    ;
-  print((str_P) help);
-}
 
 void
 Debug::Variable::print()
@@ -290,5 +315,3 @@ Debug::Variable::print()
     debug.print((uint32_t) m_ref, m_ref, m_size, IOStream::hex);
   }
 }
-
-#endif
