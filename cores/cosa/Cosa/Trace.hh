@@ -226,6 +226,17 @@ extern uint8_t trace_log_mask;
        trace << PSTR(" us") << endl,					\
        trace.flush())							\
     for (uint16_t __j = cnt; __j != 0; __j--)
+# define measure(msg,cnt)						\
+  trace.flush();							\
+  for (uint32_t __stop, __start = RTT::millis(), __i = 1;		\
+       __i != 0;							\
+       __i--,								\
+       __stop = RTT::millis(),						\
+       trace.measure = (__stop - __start) / cnt,			\
+       trace << PSTR(msg) << trace.measure,				\
+       trace << PSTR(" ms") << endl,					\
+       trace.flush())							\
+    for (uint16_t __j = cnt; __j != 0; __j--)
 #else
 # define MEASURE(msg,cnt)						\
   trace.flush();							\
@@ -237,6 +248,18 @@ extern uint8_t trace_log_mask;
        trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
        trace << PSTR(":measure:") << PSTR(msg) << trace.measure,	\
        trace << PSTR(" us") << endl,					\
+       trace.flush())							\
+    for (uint16_t __j = cnt; __j != 0; __j--)
+# define measure(msg,cnt)						\
+  trace.flush();							\
+  for (uint32_t __stop, __start = RTT::millis(), __i = 1;		\
+       __i != 0;							\
+       __i--,								\
+       __stop = RTT::millis(),						\
+       trace.measure = (__stop - __start) / cnt,			\
+       trace << __LINE__ << ':' << __PRETTY_FUNCTION__,			\
+       trace << PSTR(":measure:") << PSTR(msg) << trace.measure,	\
+       trace << PSTR(" ms") << endl,					\
        trace.flush())							\
     for (uint16_t __j = cnt; __j != 0; __j--)
 #endif
