@@ -27,8 +27,12 @@
 #include "Cosa/Types.h"
 #include "Board.h"
 
+// Custom Boards
+#if defined(COSA_CUSTOM_BOARD)
+#include <Board.map>
+
 // AdaFruit Boards
-#if defined(ADAFRUIT_ATMEGA32U4)
+#elif defined(ADAFRUIT_ATMEGA32U4)
 #include "Cosa/Board/AdaFruit/ATmega32U4.map"
 
 // Anarduino Boards
