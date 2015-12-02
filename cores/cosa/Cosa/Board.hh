@@ -98,11 +98,7 @@
 #elif defined(MICRODUINO_CORE_PLUS)
 #include "Cosa/Board/Microduino/Core_Plus.hh"
 
-// Pinoccio Boards
-#elif defined(PINOCCIO_SCOUT)
-#include "Cosa/Board/Pinoccio/Scout.hh"
-
-// PJRC Teensy Boards
+// PJRC Teensy Boards// PJRC Teensy Boards
 #elif defined(PJRC_TEENSY_2_0)
 #include "Cosa/Board/PJRC/Teensy_2_0.hh"
 #elif defined(PJRC_TEENSYPP_2_0)
