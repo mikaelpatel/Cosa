@@ -68,13 +68,14 @@ boards with AVR MCUs.
 * [LilyPad Arduino USB] (./cores/cosa/Cosa/Board/Arduino/LilyPad_USB.hh)
 * [LowPowerLab Moteino] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino.hh)
 * [LowPowerLab Moteino Mega] (./cores/cosa/Cosa/Board/LowPowerLab/Moteino_Mega.hh)
-* [Pinoccio Scout] (./cores/cosa/Cosa/Board/Pinoccio/Scout.hh)
+* [Pinoccio Scout] (https://github.com/mikaelpatel/Cosa-Pinoccio)
 * [Microduino-Core] (./cores/cosa/Cosa/Board/Microduino/Core.hh)
 * [Microduino-Core32u4] (./cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
 * [Microduino-Core+] (./cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
 * [PJRC Teensy 2.0] (./cores/cosa/Cosa/Board/PJRC/Teensy_2_0.hh)
 * [PJRC Teensy++ 2.0] (./cores/cosa/Cosa/Board/PJRC/Teensypp_2_0.hh)
 * [Wicked Device WildFire V3] (./cores/cosa/Cosa/Board/WickedDevice/WildFire.hh)
+* [Custom Board] (https://github.com/mikaelpatel/Cosa-CustomBoard)
 
 References
 ----------
