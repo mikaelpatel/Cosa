@@ -72,8 +72,8 @@ boards with AVR MCUs.
 * [Microduino-Core] (./cores/cosa/Cosa/Board/Microduino/Core.hh)
 * [Microduino-Core32u4] (./cores/cosa/Cosa/Board/Microduino/Core32U4.hh)
 * [Microduino-Core+] (./cores/cosa/Cosa/Board/Microduino/Core_Plus.hh)
-* [PJRC Teensy 2.0] (https://github.com/mikaelpatel/Cosa-PJRC/blob/master/variants/pjrc/teensy_2_0/Board.hh)
-* [PJRC Teensy++ 2.0] (https://github.com/mikaelpatel/Cosa-PJRC/blob/master/variants/pjrc/teensypp_2_0/Board.hh)
+* [PJRC Teensy 2.0] (https://github.com/mikaelpatel/Cosa-PJRC/blob/master/variants/pjrc/teensy-2.0/Board.hh)
+* [PJRC Teensy++ 2.0] (https://github.com/mikaelpatel/Cosa-PJRC/blob/master/variants/pjrc/teensypp-2.0/Board.hh)
 * [Wicked Device WildFire V3] (./cores/cosa/Cosa/Board/WickedDevice/WildFire.hh)
 * [Custom Boards] (https://github.com/mikaelpatel/Cosa-CustomBoard)
 
