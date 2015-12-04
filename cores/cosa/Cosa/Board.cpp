@@ -95,12 +95,6 @@
 #elif defined(MICRODUINO_CORE_PLUS)
 #include "Cosa/Board/Microduino/Core_Plus.map"
 
-// PJRC Teensy Boards
-#elif defined(PJRC_TEENSY_2_0)
-#include "Cosa/Board/PJRC/Teensy_2_0.map"
-#elif defined(PJRC_TEENSYPP_2_0)
-#include "Cosa/Board/PJRC/Teensypp_2_0.map"
-
 // Wicked Device Boards
 #elif defined(WICKEDDEVICE_WILDFIRE)
 #include "Cosa/Board/WickedDevice/WildFire.map"
