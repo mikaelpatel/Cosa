@@ -31,6 +31,7 @@
 #include "Cosa/Watchdog.hh"
 #include "Cosa/UART.hh"
 #include "Cosa/Trace.hh"
+#undef measure
 
 /**
  * Extend the NRF24L01P device driver with measurement and plot of
