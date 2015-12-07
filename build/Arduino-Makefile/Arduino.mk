@@ -399,8 +399,8 @@ ifndef OBJDUMP_NAME
 endif
 
 ifndef AR_NAME
-  AR_NAME = avr-ar
-  # AR_NAME = avr-gcc-ar
+  # AR_NAME = avr-ar
+  AR_NAME = avr-gcc-ar
 endif
 
 ifndef SIZE_NAME
@@ -526,6 +526,13 @@ else
     $(call show_config_variable,BOARDS_TXT,[USER])
   endif
 
+endif
+
+# Check if boards.txt should be generated from installed cores. Assume that
+# variant files have been added (symbol links).
+BOARDS_TXT_AVAILABLE := $(call dir_if_exists,$(BOARDS_TXT))
+ifndef $(BOARDS_TXT_AVAILABLE)
+  BOARDS_TXT_CAT := $(shell cat $(ARDUINO_SKETCHBOOK)/hardware/*/boards.txt > $(BOARDS_TXT))
 endif
 
 ########################################################################
