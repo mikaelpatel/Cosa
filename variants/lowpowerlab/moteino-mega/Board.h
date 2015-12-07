@@ -1,2 +1,0 @@
-#define LOWPOWERLAB_MOTEINO_MEGA
-

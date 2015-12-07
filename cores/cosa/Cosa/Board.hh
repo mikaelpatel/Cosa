@@ -84,12 +84,6 @@
 #elif defined(ITEADSTUDIO_IBOARD)
 #include "Cosa/Board/ITEADStudio/IBoard.hh"
 
-// LowPowerLab Boards
-#elif defined(LOWPOWERLAB_MOTEINO)
-#include "Cosa/Board/LowPowerLab/Moteino.hh"
-#elif defined(LOWPOWERLAB_MOTEINO_MEGA)
-#include "Cosa/Board/LowPowerLab/Moteino_Mega.hh"
-
 // Microduino Boards
 #elif defined(MICRODUINO_CORE)
 #include "Cosa/Board/Microduino/Core.hh"
