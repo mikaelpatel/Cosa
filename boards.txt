@@ -739,30 +739,3 @@ microduino-core-plus.build.board=MICRODUINO_CORE_PLUS
 microduino-core-plus.build.variant=microduino/core-plus
 microduino-core-plus.build.core=cosa
 
-##
-# WICKEDDEVICE WILDFIRE V3
-##
-
-# AVR:ATmega1284P
-# Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
-# Brown-out detection level 2.7 V. Serial program downloading enabled
-# Boot Reset vector enable (512 words, 0xfe00).
-
-wildfire.name=Cosa Wicked Device WireFire (ATmega1284P/Optiboot)
-wildfire.upload.tool=avrdude
-wildfire.upload.protocol=arduino
-wildfire.upload.maximum_size=130048
-wildfire.upload.maximum_data_size=16384
-wildfire.upload.maximum_eeprom_size=4096
-wildfire.upload.speed=115200
-
-wildfire.bootloader.tool=avrdude
-wildfire.bootloader.low_fuses=0xf7
-wildfire.bootloader.high_fuses=0xde
-wildfire.bootloader.extended_fuses=0xfd
-
-wildfire.build.mcu=atmega1284p
-wildfire.build.f_cpu=16000000L
-wildfire.build.board=WICKEDDEVICE_WILDFIRE
-wildfire.build.variant=wickeddevice/wildfire
-wildfire.build.core=cosa

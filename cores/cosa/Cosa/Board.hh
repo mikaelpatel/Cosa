@@ -92,10 +92,6 @@
 #elif defined(MICRODUINO_CORE_PLUS)
 #include "Cosa/Board/Microduino/Core_Plus.hh"
 
-// Wicked Device Boards
-#elif defined(WICKEDDEVICE_WILDFIRE)
-#include "Cosa/Board/WickedDevice/WildFire.hh"
-
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif

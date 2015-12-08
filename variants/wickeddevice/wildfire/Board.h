@@ -1,3 +1,0 @@
-#define WICKEDDEVICE_WILDFIRE
-
-
