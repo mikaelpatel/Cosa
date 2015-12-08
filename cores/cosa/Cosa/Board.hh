@@ -80,22 +80,9 @@
 #elif defined(LILYPAD_ARDUINO_USB)
 #include "Cosa/Board/Arduino/LilyPad_USB.hh"
 
-// ITEAD Studio Boards
-#elif defined(ITEADSTUDIO_IBOARD)
-#include "Cosa/Board/ITEADStudio/IBoard.hh"
-
-// Microduino Boards
-#elif defined(MICRODUINO_CORE)
-#include "Cosa/Board/Microduino/Core.hh"
-#elif defined(MICRODUINO_CORE32U4)
-#include "Cosa/Board/Microduino/Core32U4.hh"
-#elif defined(MICRODUINO_CORE_PLUS)
-#include "Cosa/Board/Microduino/Core_Plus.hh"
-
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif
-
 
 /** Digital pin index to symbol map */
 extern const Board::DigitalPin digital_pin_map[Board::DIGITAL_PIN_MAX] PROGMEM;

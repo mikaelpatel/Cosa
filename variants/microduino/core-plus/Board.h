@@ -1,3 +1,0 @@
-#define MICRODUINO_CORE_PLUS
-
-

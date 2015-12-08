@@ -77,18 +77,6 @@
 #elif defined(LILYPAD_ARDUINO_USB)
 #include "Cosa/Board/Arduino/LilyPad_USB.map"
 
-// ITEAD Studio Boards
-#elif defined(ITEADSTUDIO_IBOARD)
-#include "Cosa/Board/ITEADStudio/IBoard.map"
-
-// Microduino Boards
-#elif defined(MICRODUINO_CORE)
-#include "Cosa/Board/Microduino/Core.map"
-#elif defined(MICRODUINO_CORE32U4)
-#include "Cosa/Board/Microduino/Core32U4.map"
-#elif defined(MICRODUINO_CORE_PLUS)
-#include "Cosa/Board/Microduino/Core_Plus.map"
-
 #else
 #error "Cosa/Board.hh: board not supported"
 #endif
