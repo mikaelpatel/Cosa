@@ -31,10 +31,6 @@
 #if defined(COSA_CUSTOM_BOARD)
 #include <Board.map>
 
-// AdaFruit Boards
-#elif defined(ADAFRUIT_ATMEGA32U4)
-#include "Cosa/Board/AdaFruit/ATmega32U4.map"
-
 // Anarduino Boards
 #elif defined(ANARDUINO_MINIWIRELESS)
 #include "Cosa/Board/Anarduino/MiniWireless.map"
