@@ -1,2 +1,0 @@
-#define ANARDUINO_MINIWIRELESS
-

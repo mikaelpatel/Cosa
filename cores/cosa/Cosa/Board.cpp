@@ -31,10 +31,6 @@
 #if defined(COSA_CUSTOM_BOARD)
 #include <Board.map>
 
-// Anarduino Boards
-#elif defined(ANARDUINO_MINIWIRELESS)
-#include "Cosa/Board/Anarduino/MiniWireless.map"
-
 // Arduino Boards
 #elif defined(ARDUINO_DIECIMILA)
 #include "Cosa/Board/Arduino/Diecimila.map"

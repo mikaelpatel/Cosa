@@ -51,7 +51,7 @@ clones/vendors. It also supports breadboards and custom-design
 boards with AVR MCUs.
 
 * [AdaFruit ATmega32U4] (https://github.com/mikaelpatel/Cosa-AdaFruit/blob/master/variants/adafruit/atmega32u4/Board.hh)
-* [Anarduino MiniWireless] (./cores/cosa/Cosa/Board/Anarduino/MiniWireless.hh)
+* [Anarduino MiniWireless] (https://github.com/mikaelpatel/Cosa-Anarduino/blob/master/variants/anarduino/miniwireless/Board.hh)
 * [Arduino Diecimila] (./cores/cosa/Cosa/Board/Arduino/Diecimila.hh)
 * [Arduino Duemilanove] (./cores/cosa/Cosa/Board/Arduino/Duemilanove.hh)
 * [Arduino Leonardo] (./cores/cosa/Cosa/Board/Arduino/Leonardo.hh)
