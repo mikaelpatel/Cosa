@@ -1,0 +1,34 @@
+INSTALL COSA COMMAND LINE BUILD
+===============================
+
+1. Install gcc-avr with avr-libc and avrdude with Ubuntu Software
+   Center or apt-get. Or install Arduino IDE and Tools.
+
+2. Set environment variable COSA_DIR to the Cosa install directory.
+   $ COSA_DIR=$HOME/opt/Cosa ; export COSA_DIR
+
+3. Set environment variable GCC_AVR_VER to gcc-4.2 (for GCC AVR only)
+   $ GCC_AVR_VER=gcc-avr-4.2 ; export GCC_AVR_VER
+
+4. Add COSA_DIR/build to PATH or add a symbolic link in local bin to
+   COSA_DIR/bin/cosa.
+   $ ln -s $COSA_DIR/build/cosa $HOME/bin/cosa
+
+5. Run command line build with board.
+   $ cd Cosa/example/Benchmarks/CosaBenchmarksPins
+   $ cosa nano avanti
+
+
+INSTALL COSA CUSTOM BOARDS
+==========================
+
+1. Download custom board support and install in sketchbook hardware
+   directory.
+
+2. Add symbolic link in COSA_DIR/variants to custom board variants.
+   Example for Cosa-CustomBoard template.
+   $ ln -s $SKETCHBOOK/hardware/CustomBoard/variants/VENDOR $COSA_DIR/variants
+
+3. Verify that the custom board is now available.
+   $ cd $COSA_DIR/build
+   $ cosa boards
