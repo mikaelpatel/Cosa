@@ -33,9 +33,9 @@ ARDUINO_CORE_PATH = $(COSA_DIR)/cores/cosa
 ARDUINO_VAR_PATH = $(COSA_DIR)/variants
 ARDUINO_LIB_PATH = $(COSA_DIR)/libraries
 ifdef COSA_OBJDIR
-	BOARDS_TXT = $(COSA_OBJDIR)/boards.txt
+  BOARDS_TXT = $(COSA_OBJDIR)/boards.txt
 else
-	BOARDS_TXT = $(COSA_DIR)/obj/boards.txt
+  BOARDS_TXT = $(COSA_DIR)/obj/boards.txt
 endif
 
 MONITOR_CMD = $(COSA_DIR)/build/miniterm.py -q --lf
