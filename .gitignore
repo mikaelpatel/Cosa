@@ -1,6 +1,6 @@
 *~
 arc
-build-*
+build/boards.txt
 lib
 ref
 doc/html
