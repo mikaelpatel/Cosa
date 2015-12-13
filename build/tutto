@@ -37,7 +37,7 @@ shift
 if [ $# == 0 ];
 then
   # Build local CosaBuild for all board variants
-  variants=`grep build.variant ../obj/boards.txt | cut -d. -f1 | sort`
+  variants=`grep build.variant boards.txt | cut -d. -f1 | sort`
   for board in $variants
   do
     echo `date`: $board
