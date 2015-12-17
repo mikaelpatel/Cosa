@@ -399,8 +399,11 @@ ifndef OBJDUMP_NAME
 endif
 
 ifndef AR_NAME
-  # AR_NAME = avr-ar
-  AR_NAME = avr-gcc-ar
+  ifeq ($(shell expr $(ARDUINO_VERSION) '=' 166), 1)
+    AR_NAME = avr-gcc-ar
+  else
+    AR_NAME = avr-ar
+  endif
 endif
 
 ifndef SIZE_NAME
