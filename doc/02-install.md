@@ -14,10 +14,13 @@ https://raw.githubusercontent.com/mikaelpatel/Cosa/master/package_cosa_index.jso
 ## Via GIT
 
 ```shell
-cd <custom_path>/sketchbook
+cd <custom_path>/Arduino
 mkdir hardware # Create the hardware folder if missing
 cd hardware
+mkdir Cosa
+cd Cosa
 git clone https://github.com/mikaelpatel/Cosa.git
+mv Cosa avr
 ```
 
 Then you can update the library by using:
