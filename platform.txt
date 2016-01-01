@@ -36,12 +36,12 @@ version=2.0
 # compiler.path={runtime.ide.path}/hardware/tools/avr/bin/
 compiler.path={runtime.tools.avr-gcc.path}/bin/
 compiler.c.cmd=avr-gcc
-compiler.c.flags=-c -g -Os -Wall -ffunction-sections -fdata-sections -MMD
-compiler.c.elf.flags=-Os -Wl,--gc-sections
+compiler.c.flags=-c -g -Os -Wall -ffunction-sections -fdata-sections -MMD -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version}
+compiler.c.elf.flags=-Os -Wl,--gc-sections -mmcu={build.mcu}
 compiler.c.elf.cmd=avr-gcc
-compiler.S.flags=-c -g -assembler-with-cpp
+compiler.S.flags=-c -g -assembler-with-cpp -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version}
 compiler.cpp.cmd=avr-g++
-compiler.cpp.flags=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD
+compiler.cpp.flags=-c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version}
 compiler.ar.cmd=avr-ar
 # compiler.ar.cmd=avr-gcc-ar
 compiler.ar.flags=rcs
@@ -68,19 +68,20 @@ compiler.elf2hex.extra_flags=
 # --------------------
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.c.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.c.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Compile S files
-recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.S.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} {compiler.S.extra_flags} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
 
 ## Create archives
-recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{build.path}/{archive_file}" "{object_file}"
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
+# recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{build.path}/{archive_file}" "{object_file}"
 
 ## Combine gc-sections, archives, and objects
-recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} -mmcu={build.mcu} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" {object_files} "{build.path}/{archive_file}" "-L{build.path}" -lm
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} -o "{build.path}/{build.project_name}.elf" {object_files} "{build.path}/{archive_file}" "-L{build.path}" -lm
 
 ## Create eeprom
 recipe.objcopy.eep.pattern="{compiler.path}{compiler.objcopy.cmd}" {compiler.objcopy.eep.flags} {compiler.objcopy.eep.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.eep"
@@ -136,9 +137,9 @@ tools.ctags.pattern="{cmd.path}" -u --language-force=c++ -f - --c++-kinds=svpf -
 # additional entries
 tools.avrdude.path={runtime.tools.avrdude.path}
 
-# preproc.includes.flags=-w -x c++ -M -MG -MP -mmcu={build.mcu}
+preproc.includes.flags=-w -x c++ -M -MG -MP -mmcu={build.mcu}
 # recipe.preproc.includes="{compiler.path}{compiler.cpp.cmd}" {preproc.includes.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {includes} "{source_file}"
 
-# preproc.macros.flags=-w -x c++ -E -CC -mmcu={build.mcu}
+preproc.macros.flags=-w -x c++ -E -CC -mmcu={build.mcu}
 # preproc.macros.compatibility_flags={build.mbed_api_include} {build.nRF51822_api_include} {build.ble_api_include} {compiler.libsam.c.flags} {compiler.arm.cmsis.path} {build.variant_system_include}
 # recipe.preproc.macros="{compiler.path}{compiler.cpp.cmd}" {compiler.cpreprocessor.flags} {compiler.cpp.flags} {preproc.macros.flags} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} {compiler.cpp.extra_flags} {build.extra_flags} {preproc.macros.compatibility_flags} {includes} "{source_file}"
