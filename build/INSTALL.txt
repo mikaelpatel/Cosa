@@ -23,12 +23,14 @@ INSTALL COSA CUSTOM BOARDS
 ==========================
 
 1. Download custom board support and install in sketchbook hardware
-   directory.
+   directory. The command line build assumes that they are installed
+   with 1.0.X directory structure (i.e. without the avr level).
 
 2. Add symbolic link in COSA_DIR/variants to custom board variants.
    Example for Cosa-CustomBoard template.
    $ ln -s $SKETCHBOOK/hardware/CustomBoard/variants/VENDOR $COSA_DIR/variants
 
-3. Verify that the custom board is now available.
+3. Verify that the custom board is now available. The following
+   commands will generate and print the list of boards.
    $ cd $COSA_DIR/build
    $ cosa boards

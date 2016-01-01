@@ -13,11 +13,23 @@ https://raw.githubusercontent.com/mikaelpatel/Cosa/master/package_cosa_index.jso
 
 ## Via GIT
 
+For Arduino 1.0.X:
 ```shell
 cd <custom_path>/sketchbook
-mkdir hardware # Create the hardware folder if missing
+mkdir hardware
 cd hardware
 git clone https://github.com/mikaelpatel/Cosa.git
+```
+
+For Arduino 1.5.x and higher an extra avr directory level is needed:
+```shell
+cd <custom_path>/sketchbook
+mkdir hardware
+cd hardware
+mkdir Cosa
+cd Cosa
+git clone https://github.com/mikaelpatel/Cosa.git
+mv Cosa avr
 ```
 
 Then you can update the library by using:
