@@ -46,7 +46,7 @@ diecimila.build.mcu=atmega168
 diecimila.build.f_cpu=16000000L
 diecimila.build.board=ARDUINO_DIECIMILA
 diecimila.build.variant=arduino/diecimila
-diecimila.build.core=cosa
+diecimila.build.core=Cosa:cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -69,7 +69,7 @@ duemilanove.build.mcu=atmega328p
 duemilanove.build.f_cpu=16000000L
 duemilanove.build.board=ARDUINO_DUEMILANOVE
 duemilanove.build.variant=arduino/duemilanove
-duemilanove.build.core=cosa
+duemilanove.build.core=Cosa:cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -100,7 +100,7 @@ leonardo.build.usb_product="Arduino Leonardo"
 leonardo.build.board=ARDUINO_LEONARDO
 leonardo.build.variant=arduino/leonardo
 leonardo.build.extra_flags={build.usb_flags}
-leonardo.build.core=cosa
+leonardo.build.core=Cosa:cosa
 
 # AVR:ATmega1280
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -123,7 +123,7 @@ mega1280.build.mcu=atmega1280
 mega1280.build.f_cpu=16000000L
 mega1280.build.board=ARDUINO_MEGA1280
 mega1280.build.variant=arduino/mega1280
-mega1280.build.core=cosa
+mega1280.build.core=Cosa:cosa
 
 # AVR:ATmega2560
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -146,7 +146,7 @@ mega2560.build.mcu=atmega2560
 mega2560.build.f_cpu=16000000L
 mega2560.build.board=ARDUINO_MEGA2560
 mega2560.build.variant=arduino/mega2560
-mega2560.build.core=cosa
+mega2560.build.core=Cosa:cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -177,7 +177,7 @@ micro.build.usb_product="Arduino Micro"
 micro.build.board=ARDUINO_MICRO
 micro.build.variant=arduino/micro
 micro.build.extra_flags={build.usb_flags}
-micro.build.core=cosa
+micro.build.core=Cosa:cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -200,7 +200,7 @@ nano.build.mcu=atmega328p
 nano.build.f_cpu=16000000L
 nano.build.board=ARDUINO_NANO
 nano.build.variant=arduino/nano
-nano.build.core=cosa
+nano.build.core=Cosa:cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -231,7 +231,7 @@ pro-micro.build.usb_product="Arduino Pro Micro"
 pro-micro.build.board=ARDUINO_PRO_MICRO
 pro-micro.build.variant=arduino/pro-micro
 pro-micro.build.extra_flags={build.usb_flags}
-pro-micro.build.core=cosa
+pro-micro.build.core=Cosa:cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.=8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -262,7 +262,7 @@ pro-micro-8.build.usb_product="Arduino Pro Micro"
 pro-micro-8.build.board=ARDUINO_PRO_MICRO
 pro-micro-8.build.variant=arduino/pro-micro
 pro-micro-8.build.extra_flags={build.usb_flags}
-pro-micro-8.build.core=cosa
+pro-micro-8.build.core=Cosa:cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -285,7 +285,7 @@ pro-mini.build.mcu=atmega328p
 pro-mini.build.f_cpu=16000000L
 pro-mini.build.board=ARDUINO_PRO_MINI
 pro-mini.build.variant=arduino/pro-mini
-pro-mini.build.core=cosa
+pro-mini.build.core=Cosa:cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -308,7 +308,7 @@ pro-mini-8.build.mcu=atmega328p
 pro-mini-8.build.f_cpu=8000000L
 pro-mini-8.build.board=ARDUINO_PRO_MINI
 pro-mini-8.build.variant=arduino/pro-mini
-pro-mini-8.build.core=cosa
+pro-mini-8.build.core=Cosa:cosa
 
 # AVR:ATmega328
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK/14 CK + 65 ms
@@ -331,7 +331,7 @@ uno.build.mcu=atmega328p
 uno.build.f_cpu=16000000L
 uno.build.board=ARDUINO_UNO
 uno.build.variant=arduino/uno
-uno.build.core=cosa
+uno.build.core=Cosa:cosa
 
 ##
 # BREADBOARDS
@@ -360,7 +360,7 @@ attiny84-8.build.mcu=attiny84
 attiny84-8.build.f_cpu=8000000L
 attiny84-8.build.board=BREADBOARD_ATTINYX4
 attiny84-8.build.variant=arduino/attinyx4
-attiny84-8.build.core=cosa
+attiny84-8.build.core=Cosa:cosa
 
 # AVR:ATtiny85
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
@@ -385,7 +385,7 @@ attiny85-8.build.mcu=attiny85
 attiny85-8.build.f_cpu=8000000L
 attiny85-8.build.board=BREADBOARD_ATTINYX5
 attiny85-8.build.variant=arduino/attinyx5
-attiny85-8.build.core=cosa
+attiny85-8.build.core=Cosa:cosa
 
 # AVR:ATtiny861
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 64 ms
@@ -410,7 +410,7 @@ attiny861-8.build.mcu=attiny861
 attiny861-8.build.f_cpu=8000000L
 attiny861-8.build.board=BREADBOARD_ATTINYX61
 attiny861-8.build.variant=arduino/attinyx61
-attiny861-8.build.core=cosa
+attiny861-8.build.core=Cosa:cosa
 
 # AVR:ATmega328
 # Int. RC Osc.8 MHz; Start-up time PWRDWN/RESET: 6 CK/14 CK + 65 ms
@@ -433,7 +433,7 @@ atmega328-8.build.mcu=atmega328p
 atmega328-8.build.f_cpu=8000000L
 atmega328-8.build.board=BREADBOARD_ATMEGA328P
 atmega328-8.build.variant=arduino/atmega328p
-atmega328-8.build.core=cosa
+atmega328-8.build.core=Cosa:cosa
 
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -456,7 +456,7 @@ mighty.build.mcu=atmega1284p
 mighty.build.f_cpu=16000000L
 mighty.build.board=BREADBOARD_ATMEGA1284P
 mighty.build.variant=arduino/atmega1284p
-mighty.build.core=cosa
+mighty.build.core=Cosa:cosa
 
 # AVR:ATmega1284
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -479,7 +479,7 @@ mighty-opt.build.mcu=atmega1284p
 mighty-opt.build.f_cpu=16000000L
 mighty-opt.build.board=BREADBOARD_ATMEGA1284P
 mighty-opt.build.variant=arduino/atmega1284p
-mighty-opt.build.core=cosa
+mighty-opt.build.core=Cosa:cosa
 
 ##
 # LILYPAD ARDUINO BOARDS
@@ -506,7 +506,7 @@ lilypad.build.mcu=atmega328p
 lilypad.build.f_cpu=8000000L
 lilypad.build.board=LILYPAD_ARDUINO
 lilypad.build.variant=arduino/lilypad
-lilypad.build.core=cosa
+lilypad.build.core=Cosa:cosa
 
 # AVR:ATmega32U4
 # Ext Crystal Osc.>8 MHz; Start-up time PWRDWN/RESET: 16K CK + 65 ms
@@ -537,5 +537,5 @@ lilypad-usb.usb_product="Arduino LilyPad USB"
 lilypad-usb.build.board=LILYPAD_ARDUINO_USB
 lilypad-usb.build.variant=arduino/lilypad-usb
 lilypad-usb.build.extra_flags={build.usb_flags}
-lilypad-usb.build.core=cosa
+lilypad-usb.build.core=Cosa:cosa
 
