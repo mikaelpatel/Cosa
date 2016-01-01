@@ -49,7 +49,7 @@ config_t config EEMEM = {
 };
 
 // Sensor log in EEPROM
-static const int DATA_MAX = 8;
+static const int DATA_MAX = 64;
 uint16_t data[DATA_MAX] EEMEM;
 
 // Analog input pin
@@ -74,6 +74,8 @@ void setup()
 	<< PSTR(", speed = ") << init.speed
 	<< PSTR(", name = \"") << init.name
 	<< PSTR("\")\n");
+
+  AnalogPin::powerup();
 }
 
 void loop()
