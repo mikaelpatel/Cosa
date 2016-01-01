@@ -50,11 +50,14 @@ public:
   /** Start address of clock/calender internal registers. */
   static const uint8_t RTC_START = 0;
 
+  /** Static memory size. */
+  static const size_t RAM_MAX = 31;
+
   /** Start address of static memory. */
   static const uint8_t RAM_START = 32;
 
-  /** Static memory size. */
-  static const size_t RAM_MAX = 31;
+  /** End address of static memory. */
+  static const uint8_t RAM_END = RAM_START + RAM_MAX;
 
   /**
    * Construct device driver for DS1302 Real-Time Clock with the given
