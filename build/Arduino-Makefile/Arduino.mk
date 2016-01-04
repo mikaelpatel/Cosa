@@ -534,7 +534,7 @@ endif
 # Check if boards.txt should be generated from installed cores. Assume that
 # variant files have been added (symbol links).
 BOARDS_TXT_AVAILABLE := $(call dir_if_exists,$(BOARDS_TXT))
-ifndef $(BOARDS_TXT_AVAILABLE)
+ifndef BOARDS_TXT_AVAILABLE
   BOARDS_TXT_CAT := $(shell cat $(ARDUINO_SKETCHBOOK)/hardware/*/boards.txt > $(BOARDS_TXT))
 endif
 
