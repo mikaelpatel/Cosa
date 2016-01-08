@@ -20,7 +20,7 @@
 
 #include "ILI9341.hh"
 
-const uint8_t ILI9341::script[] __PROGMEM = {
+const uint8_t ILI9341::s_script[] __PROGMEM = {
   // Software Reset
   SWRESET, 0,
   // Software Delay
