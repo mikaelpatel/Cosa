@@ -37,7 +37,7 @@ version=2.0
 compiler.path={runtime.tools.avr-gcc.path}/bin/
 compiler.c.cmd=avr-gcc
 compiler.c.flags=-c -g -Os -Wall -ffunction-sections -fdata-sections -MMD -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version}
-compiler.c.elf.flags=-Os -Wl,--gc-sections -mmcu={build.mcu}
+compiler.c.elf.flags=-Os -mmcu={build.mcu} -Wl,--gc-sections
 compiler.c.elf.cmd=avr-gcc
 compiler.S.flags=-c -g -assembler-with-cpp -mmcu={build.mcu} -DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version}
 compiler.cpp.cmd=avr-g++
