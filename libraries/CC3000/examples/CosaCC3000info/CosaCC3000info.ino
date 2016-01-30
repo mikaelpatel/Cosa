@@ -78,18 +78,22 @@ void setup()
     if (res < 0) TRACE(res);
   }
 
-  INFO("MAC and Network addresses:", 0);
   uint8_t ip[4];
   uint8_t subnet[4];
   uint8_t dns[4];
   uint8_t mac[6];
 
-  do {
-    wifi.service();
-    wifi.addr(ip, subnet);
-  } while (*ip == 0 && 0);
-  wifi.dns_addr(dns);
-  wifi.mac_addr(mac);
+  MEASURE("Wait for connection:", 1)
+    while (1) {
+      wifi.addr(ip, subnet);
+      if (*ip != 0) break;
+      wifi.service();
+    }
+
+  MEASURE("MAC and Network addresses:", 1) {
+    wifi.dns_addr(dns);
+    wifi.mac_addr(mac);
+  }
 
   trace << "MAC="; INET::print_mac(trace, mac); trace << endl;
   trace << "IP=";  INET::print_addr(trace, ip); trace << endl;
