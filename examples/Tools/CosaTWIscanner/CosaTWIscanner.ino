@@ -46,6 +46,7 @@ const char adxl345[]  __PROGMEM = "ADXL345,Digital Accelermeter";
 const char at24cxx[]  __PROGMEM = "AT24CXX,Serial EEPROM";
 const char bmp085[]   __PROGMEM = "BMP085,Digital Pressure Sensor";
 const char ds1307[]   __PROGMEM = "DS1307,Real-Time Clock";
+const char ds2482[]   __PROGMEM = "DS2482, Single-Channel 1-Wire Master";
 const char ds3231[]   __PROGMEM = "DS3231,Extremely Accurated RTC/TCXO/Crystal";
 const char hmc5883l[] __PROGMEM = "HMC5883L,3-Axis Digital Compass";
 const char pcf8574[]  __PROGMEM = "PCF8574,Remote 8-bit I/O Expander";
@@ -72,6 +73,7 @@ const tab_t dev_tab[] __PROGMEM = {
   { 0x77, 0xff, 0,       0, bmp085   },
   { 0x70, 0xf8, 0,       0, pcf8574a },
   { 0xd0, 0xff, 0,       0, ds3231   },
+  { 0x18, 0xfe, 0,       0, ds2482   },
 };
 
 /**
