@@ -96,8 +96,10 @@ public:
     synchronized {
       m_msec += ms;
       if (m_msec >= 1000) {
-	m_msec -= 1000 + m_cal;
-	m_sec += 1;
+	do {
+	  m_msec -= 1000 + m_cal;
+	  m_sec += 1;
+	} while (m_msec >= 1000);
 	dispatch();
       }
     }
