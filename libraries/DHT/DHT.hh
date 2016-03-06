@@ -28,7 +28,7 @@
 /**
  * DHT11/22 Humidity & Temperature Sensor common device driver.
  * Uses external interrupt on high to low transition to capture
- * serial data from the device. Please not that excessive interrupt
+ * serial data from the device. Please note that excessive interrupt
  * sources may affect the capture.
  */
 class DHT : public ExternalInterrupt {
