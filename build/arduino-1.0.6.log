@@ -1,79 +1,79 @@
-Sat Jan 30 23:16:23 CET 2016: adafruit-atmega32u4
-Program:    4528 bytes (13.8% Full)
+Sun May 15 12:36:05 CEST 2016: adafruit-atmega32u4
+Program:    4568 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:16:25 CET 2016: adafruit-atmega32u4-cat
-Program:    4528 bytes (13.8% Full)
+Sun May 15 12:36:08 CEST 2016: adafruit-atmega32u4-cat
+Program:    4568 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:16:29 CET 2016: atmega328-8
+Sun May 15 12:36:10 CEST 2016: atmega328-8
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:16:31 CET 2016: attiny84-8
+Sun May 15 12:36:13 CEST 2016: attiny84-8
 Program:     182 bytes (2.2% Full)
 Data:          1 bytes (0.2% Full)
-Sat Jan 30 23:16:34 CET 2016: attiny85-8
+Sun May 15 12:36:15 CEST 2016: attiny85-8
 Program:     178 bytes (2.2% Full)
 Data:          1 bytes (0.2% Full)
-Sat Jan 30 23:16:37 CET 2016: attiny861-8
+Sun May 15 12:36:17 CEST 2016: attiny861-8
 Program:     186 bytes (2.3% Full)
 Data:          1 bytes (0.2% Full)
-Sat Jan 30 23:16:40 CET 2016: cosa-custom-board
+Sun May 15 12:36:20 CEST 2016: cosa-custom-board
 Program:     306 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:16:42 CET 2016: diecimila
+Sun May 15 12:36:22 CEST 2016: diecimila
 Program:     290 bytes (1.8% Full)
 Data:          1 bytes (0.1% Full)
-Sat Jan 30 23:16:45 CET 2016: duemilanove
+Sun May 15 12:36:24 CEST 2016: duemilanove
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:16:47 CET 2016: iboard
+Sun May 15 12:36:26 CEST 2016: iboard
 Program:     488 bytes (1.5% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:16:50 CET 2016: leonardo
-Program:    4548 bytes (13.9% Full)
+Sun May 15 12:36:29 CEST 2016: leonardo
+Program:    4588 bytes (14.0% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:16:53 CET 2016: lilypad
+Sun May 15 12:36:31 CEST 2016: lilypad
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:16:56 CET 2016: lilypad-usb
-Program:    4528 bytes (13.8% Full)
+Sun May 15 12:36:34 CEST 2016: lilypad-usb
+Program:    4568 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:16:58 CET 2016: mega1280
+Sun May 15 12:36:36 CEST 2016: mega1280
 Program:     430 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:01 CET 2016: mega2560
+Sun May 15 12:36:39 CEST 2016: mega2560
 Program:     434 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:04 CET 2016: micro
-Program:    4528 bytes (13.8% Full)
+Sun May 15 12:36:41 CEST 2016: micro
+Program:    4568 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:17:07 CET 2016: microduino-core
+Sun May 15 12:36:44 CEST 2016: microduino-core
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:09 CET 2016: microduino-core32u4
-Program:    4528 bytes (13.8% Full)
+Sun May 15 12:36:47 CEST 2016: microduino-core32u4
+Program:    4568 bytes (13.9% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:17:12 CET 2016: microduino-core-plus
+Sun May 15 12:36:49 CEST 2016: microduino-core-plus
 Program:     310 bytes (0.5% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:15 CET 2016: mighty
+Sun May 15 12:36:52 CEST 2016: mighty
 Program:     342 bytes
 Data:          1 bytes
-Sat Jan 30 23:17:17 CET 2016: mighty-opt
+Sun May 15 12:36:54 CEST 2016: mighty-opt
 Program:     342 bytes
 Data:          1 bytes
-Sat Jan 30 23:17:20 CET 2016: miniwireless
+Sun May 15 12:36:57 CEST 2016: miniwireless
 Program:    1304 bytes (4.0% Full)
 Data:         16 bytes (0.8% Full)
-Sat Jan 30 23:17:23 CET 2016: moteino
+Sun May 15 12:36:59 CEST 2016: moteino
 Program:     488 bytes (1.5% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:25 CET 2016: moteino-mega
+Sun May 15 12:37:02 CEST 2016: moteino-mega
 Program:     368 bytes
 Data:          1 bytes
-Sat Jan 30 23:17:28 CET 2016: nano
+Sun May 15 12:37:04 CEST 2016: nano
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:31 CET 2016: pinoccio
+Sun May 15 12:37:07 CEST 2016: pinoccio
 unknown MCU 'atmega256rfr2' specified
 Known MCU names:
    avr2
@@ -522,27 +522,27 @@ CosaBuild.ino:1: error: MCU ‘atmega256rfr2’ supported for assembler only
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:86: error: ‘ACSR’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.hh:86: error: ‘ACD’ was not declared in this scope
 /home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/AnalogComparator.cpp:31: warning: ‘ANALOG_COMP_vect’ appears to be a misspelled signal handler
-Sat Jan 30 23:17:32 CET 2016: pro-micro
-Program:    4548 bytes (13.9% Full)
+Sun May 15 12:37:08 CEST 2016: pro-micro
+Program:    4588 bytes (14.0% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:17:35 CET 2016: pro-micro-8
-Program:    4548 bytes (13.9% Full)
+Sun May 15 12:37:11 CEST 2016: pro-micro-8
+Program:    4588 bytes (14.0% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:17:38 CET 2016: pro-mini
+Sun May 15 12:37:13 CEST 2016: pro-mini
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:41 CET 2016: pro-mini-8
+Sun May 15 12:37:16 CEST 2016: pro-mini-8
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:44 CET 2016: teensy-2_0
-Program:    4544 bytes (13.9% Full)
+Sun May 15 12:37:18 CEST 2016: teensy-2_0
+Program:    4584 bytes (14.0% Full)
 Data:        189 bytes (7.4% Full)
-Sat Jan 30 23:17:47 CET 2016: teensypp-2_0
-Program:    4554 bytes (3.5% Full)
+Sun May 15 12:37:21 CEST 2016: teensypp-2_0
+Program:    4594 bytes (3.5% Full)
 Data:        189 bytes (2.3% Full)
-Sat Jan 30 23:17:50 CET 2016: uno
+Sun May 15 12:37:24 CEST 2016: uno
 Program:     290 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-Sat Jan 30 23:17:52 CET 2016: wildfire
+Sun May 15 12:37:26 CEST 2016: wildfire
 Program:     592 bytes
 Data:          1 bytes
