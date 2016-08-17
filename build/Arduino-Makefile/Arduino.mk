@@ -337,7 +337,8 @@ ifndef ARDUINO_VERSION
   # Remove all the decimals, and right-pad with zeros, and finally
   # grab the first 3 bytes. Works for 1.0 and 1.0.1
   VERSION_FILE := $(ARDUINO_DIR)/lib/version.txt
-  AUTO_ARDUINO_VERSION := $(shell [ -e "$(VERSION_FILE)" ] && cat "$(VERSION_FILE)" | sed -e 's/^[0-9]://g' -e 's/[.]//g' -e 's/$$/0000/' | head -c3)
+  # AUTO_ARDUINO_VERSION := $(shell [ -e "$(VERSION_FILE)" ] && cat "$(VERSION_FILE)" | sed -e 's/^[0-9]://g' -e 's/[.]//g' -e 's/$$/0000/' | head -c3)
+  AUTO_ARDUINO_VERSION := $(shell [ -e "$(VERSION_FILE)" ] && cat "$(VERSION_FILE)" | sed -e 's/[.]//g')
   ifdef AUTO_ARDUINO_VERSION
     ARDUINO_VERSION = $(AUTO_ARDUINO_VERSION)
     $(call show_config_variable,ARDUINO_VERSION,[AUTODETECTED])
@@ -399,7 +400,7 @@ ifndef OBJDUMP_NAME
 endif
 
 ifndef AR_NAME
-  ifeq ($(shell expr $(ARDUINO_VERSION) '=' 166), 1)
+  ifeq ($(shell expr $(ARDUINO_VERSION) '>' 169), 1)
     AR_NAME = avr-gcc-ar
   else
     AR_NAME = avr-ar
@@ -909,7 +910,7 @@ else
 endif
 
 # Add extra flags for higher Arduino versions
-ifeq ($(shell expr $(ARDUINO_VERSION) '<' 157), 1)
+ifeq ($(shell expr $(ARDUINO_VERSION) '<' 158), 1)
   EXTRA_CFLAGS += -Wextra
   EXTRA_LDFLAGS +=
   EXTRA_CXXFLAGS += -Wextra -std=gnu++0x -felide-constructors
@@ -917,9 +918,6 @@ else
   EXTRA_CFLAGS += -Wextra -flto
   EXTRA_LDFLAGS += -w -Wl,-relax -flto
   EXTRA_CXXFLAGS += -Woverloaded-virtual -Wextra -flto -std=gnu++11 -felide-constructors -fno-implement-inlines -fno-rtti -fno-threadsafe-statics -mcall-prologues
-endif
-ifeq ($(shell expr $(ARDUINO_VERSION) '<' 166), 1)
-  AR_NAME = avr-ar
 endif
 
 CFLAGS += $(EXTRA_FLAGS) $(EXTRA_CFLAGS)
