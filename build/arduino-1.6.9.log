@@ -1,102 +1,102 @@
-Wed Aug 17 21:34:14 CEST 2016: adafruit-atmega32u4
+Sun Aug 21 15:52:17 CEST 2016: adafruit-atmega32u4
 Program:    3832 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:34:17 CEST 2016: adafruit-atmega32u4-cat
+Sun Aug 21 15:52:20 CEST 2016: adafruit-atmega32u4-cat
 Program:    3832 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:34:19 CEST 2016: atmega328-8
+Sun Aug 21 15:52:23 CEST 2016: atmega328-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:22 CEST 2016: attiny84-8
+Sun Aug 21 15:52:26 CEST 2016: attiny84-8
 Program:     124 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:24 CEST 2016: attiny85-8
+Sun Aug 21 15:52:28 CEST 2016: attiny85-8
 Program:     120 bytes (1.5% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:26 CEST 2016: attiny861-8
+Sun Aug 21 15:52:31 CEST 2016: attiny861-8
 Program:     118 bytes (1.4% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:28 CEST 2016: cosa-custom-board
+Sun Aug 21 15:52:33 CEST 2016: cosa-custom-board
 Program:     226 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:31 CEST 2016: diecimila
+Sun Aug 21 15:52:37 CEST 2016: diecimila
 Program:     206 bytes (1.3% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:33 CEST 2016: duemilanove
+Sun Aug 21 15:52:40 CEST 2016: duemilanove
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:35 CEST 2016: iboard
+Sun Aug 21 15:52:43 CEST 2016: iboard
 Program:     236 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:38 CEST 2016: leonardo
+Sun Aug 21 15:52:45 CEST 2016: leonardo
 Program:    3830 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:34:40 CEST 2016: lilypad
+Sun Aug 21 15:52:48 CEST 2016: lilypad
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:42 CEST 2016: lilypad-usb
+Sun Aug 21 15:52:50 CEST 2016: lilypad-usb
 Program:    3832 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:34:45 CEST 2016: mega1280
+Sun Aug 21 15:52:53 CEST 2016: mega1280
 Program:     340 bytes (0.3% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:47 CEST 2016: mega2560
+Sun Aug 21 15:52:56 CEST 2016: mega2560
 Program:     344 bytes (0.1% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:49 CEST 2016: micro
+Sun Aug 21 15:52:59 CEST 2016: micro
 Program:    3832 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:34:52 CEST 2016: microduino-core
+Sun Aug 21 15:53:02 CEST 2016: microduino-core
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:54 CEST 2016: microduino-core32u4
+Sun Aug 21 15:53:05 CEST 2016: microduino-core32u4
 Program:    3832 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:34:57 CEST 2016: microduino-core-plus
+Sun Aug 21 15:53:07 CEST 2016: microduino-core-plus
 Program:     236 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:34:59 CEST 2016: mighty
+Sun Aug 21 15:53:10 CEST 2016: mighty
 Program:     262 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:01 CEST 2016: mighty-opt
+Sun Aug 21 15:53:12 CEST 2016: mighty-opt
 Program:     262 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:03 CEST 2016: miniwireless
+Sun Aug 21 15:53:15 CEST 2016: miniwireless
 Program:     864 bytes (2.6% Full)
 Data:         13 bytes (0.6% Full)
-Wed Aug 17 21:35:06 CEST 2016: moteino
+Sun Aug 21 15:53:17 CEST 2016: moteino
 Program:     236 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:08 CEST 2016: moteino-mega
+Sun Aug 21 15:53:20 CEST 2016: moteino-mega
 Program:     282 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:10 CEST 2016: nano
+Sun Aug 21 15:53:22 CEST 2016: nano
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:12 CEST 2016: pinoccio
+Sun Aug 21 15:53:25 CEST 2016: pinoccio
 Program:     434 bytes (0.2% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:14 CEST 2016: pro-micro
+Sun Aug 21 15:53:27 CEST 2016: pro-micro
 Program:    3830 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:35:17 CEST 2016: pro-micro-8
+Sun Aug 21 15:53:30 CEST 2016: pro-micro-8
 Program:    3830 bytes (11.7% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:35:19 CEST 2016: pro-mini
+Sun Aug 21 15:53:33 CEST 2016: pro-mini
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:22 CEST 2016: pro-mini-8
+Sun Aug 21 15:53:35 CEST 2016: pro-mini-8
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:24 CEST 2016: teensy-2_0
+Sun Aug 21 15:53:37 CEST 2016: teensy-2_0
 Program:    3852 bytes (11.8% Full)
 Data:        296 bytes (11.6% Full)
-Wed Aug 17 21:35:26 CEST 2016: teensypp-2_0
+Sun Aug 21 15:53:40 CEST 2016: teensypp-2_0
 Program:    3858 bytes (2.9% Full)
 Data:        296 bytes (3.6% Full)
-Wed Aug 17 21:35:29 CEST 2016: uno
+Sun Aug 21 15:53:42 CEST 2016: uno
 Program:     216 bytes (0.7% Full)
 Data:          0 bytes (0.0% Full)
-Wed Aug 17 21:35:31 CEST 2016: wildfire
+Sun Aug 21 15:53:45 CEST 2016: wildfire
 Program:     512 bytes (0.4% Full)
 Data:          0 bytes (0.0% Full)
