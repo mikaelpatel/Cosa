@@ -231,7 +231,7 @@
 # specify a few more variables, depending on the core in use.
 #
 # The HLT (attiny-master) core can be used just by specifying
-# ALTERNATE_CORE, assuming your core is in your ~/sketchbook/hardware
+# ALTERNATE_CORE, assuming your core is in your ~/Sketchbook/hardware
 # directory. For example:
 #
 # ISP_PORT = /dev/ttyACM0
@@ -246,16 +246,16 @@
 # ISP_PORT = /dev/ttyACM0
 # BOARD_TAG = attiny85at8
 # ALTERNATE_CORE = arduino-tiny
-# ARDUINO_VAR_PATH = ~/sketchbook/hardware/arduino-tiny/cores/tiny
-# ARDUINO_CORE_PATH = ~/sketchbook/hardware/arduino-tiny/cores/tiny
+# ARDUINO_VAR_PATH = ~/Sketchbook/hardware/arduino-tiny/cores/tiny
+# ARDUINO_CORE_PATH = ~/Sketchbook/hardware/arduino-tiny/cores/tiny
 #
 # or....
 #
 # ISP_PORT = /dev/ttyACM0
 # BOARD_TAG = attiny861at8
 # ALTERNATE_CORE = tiny2
-# ARDUINO_VAR_PATH = ~/sketchbook/hardware/tiny2/cores/tiny
-# ARDUINO_CORE_PATH = ~/sketchbook/hardware/tiny2/cores/tiny
+# ARDUINO_VAR_PATH = ~/Sketchbook/hardware/tiny2/cores/tiny
+# ARDUINO_CORE_PATH = ~/Sketchbook/hardware/tiny2/cores/tiny
 #
 ########################################################################
 
@@ -373,7 +373,7 @@ ifndef ARDUINO_SKETCHBOOK
   ifneq ($(ARDUINO_SKETCHBOOK),)
     $(call show_config_variable,ARDUINO_SKETCHBOOK,[AUTODETECTED],(from arduino preferences file))
   else
-    ARDUINO_SKETCHBOOK = $(HOME)/sketchbook
+    ARDUINO_SKETCHBOOK = $(HOME)/Sketchbook
     $(call show_config_variable,ARDUINO_SKETCHBOOK,[DEFAULT])
   endif
 else
