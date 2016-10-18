@@ -311,7 +311,7 @@ ifndef ARDUINO_DIR
     ARDUINO_DIR = $(AUTO_ARDUINO_DIR)
     $(call show_config_variable,ARDUINO_DIR,[AUTODETECTED])
   else
-    echo $(error "ARDUINO_DIR is not defined")
+#    echo $(error "ARDUINO_DIR is not defined")
   endif
 else
   $(call show_config_variable,ARDUINO_DIR,[USER])
