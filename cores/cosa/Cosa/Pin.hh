@@ -265,14 +265,6 @@ protected:
   {
     return (Board::PCIMR(m_pin));
   }
-
-  /**
-   * Print abstract pin information to given stream.
-   * @param[in] outs output stream to print on.
-   * @param[in] pin to print
-   * @return iostream.
-   */
-  friend IOStream& operator<<(IOStream& outs, Pin& pin);
 };
 
 /**

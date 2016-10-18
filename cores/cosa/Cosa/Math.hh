@@ -111,7 +111,7 @@ T map(T x)
   if (UNLIKELY(x > in_max)) return (out_max);
   T range = in_max - in_min;
   T domain = out_max - out_min;
-  return ((((x - in_min) * domain)/range) + out_min);
+  return ((((x - in_min) * domain) / range) + out_min);
 }
 
 /**

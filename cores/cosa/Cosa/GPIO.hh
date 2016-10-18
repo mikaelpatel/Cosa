@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2015, Mikael Patel
+ * Copyright (C) 2015-2016, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,7 @@ public:
    * @param[in] value initial value of port.
    * @note atomic
    */
-  GPIO(Board::DigitalPin pin, Mode mode, bool value = 0) :
+  GPIO(Board::DigitalPin pin, Mode mode = INPUT_MODE, bool value = 0) :
     m_sfr(Board::SFR(pin)),
     m_mask(MASK(pin))
   {
@@ -256,8 +256,20 @@ public:
   {
     volatile uint8_t* port = PIN(pin);
     const uint8_t mask = MASK(pin);
-    *port = mask;
-  }
+#if (ARDUINO > 150)
+    // Synchronized not needed when constant values (and lower ports)
+#if defined(PORTH)
+    if (((int) port < PORTH) && __builtin_constant_p(pin))
+#else
+    if (__builtin_constant_p(pin))
+#endif
+      *port = mask;
+    else
+#endif
+      synchronized {
+	*port = mask;
+      }
+    }
 
 protected:
   /** Special function register pointer. */

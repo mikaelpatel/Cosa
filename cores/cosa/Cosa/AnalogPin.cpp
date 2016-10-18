@@ -78,4 +78,3 @@ ISR(ADC_vect)
   if (UNLIKELY(AnalogPin::sampling_pin == NULL)) return;
   AnalogPin::sampling_pin->on_interrupt(ADCW);
 }
-

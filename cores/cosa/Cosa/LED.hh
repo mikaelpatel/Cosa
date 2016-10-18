@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2013-2015, Mikael Patel
+ * Copyright (C) 2013-2016, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,7 +24,6 @@
 #include "Cosa/Types.h"
 #include "Cosa/OutputPin.hh"
 #include "Cosa/Periodic.hh"
-#include "Cosa/Watchdog.hh"
 
 /**
  * Blinking LED; Use built-in LED or other digital pin for pulse.

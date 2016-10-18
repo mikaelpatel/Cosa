@@ -43,8 +43,7 @@ void setup()
   TRACE(sizeof(OutputPin));
   TRACE(sizeof(PWMPin));
 
-  // Print debug information about the pin before starting it
-  trace << ledPin << endl;
+  // Start PWM pin
   ledPin.begin();
 
   // Start the watchdog ticks counter

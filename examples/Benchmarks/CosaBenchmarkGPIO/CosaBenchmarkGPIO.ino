@@ -282,4 +282,3 @@ void loop()
   // Stop the benchmark
   ASSERT(true == false);
 }
-

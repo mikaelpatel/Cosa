@@ -61,7 +61,7 @@ public:
    * @param[in] duty cycle (0..255)
    * @return pwm pin.
    */
-  PWMPin& operator<<(uint8_t duty)
+  PWMPin& operator=(uint8_t duty)
     __attribute__((always_inline))
   {
     set(duty);
