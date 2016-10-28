@@ -1,0 +1,20 @@
+{
+  "build": {
+    "core": "cosa", 
+    "extra_flags": "-DARDUINO_ARCH_AVR -DARDUINO_AVR_DIGISPARK", 
+    "f_cpu": "16000000L", 
+    "mcu": "attiny85", 
+    "variant": "arduino/attinyx5"
+  }, 
+  "frameworks": [
+    "cosa"
+, "cosa"   ], 
+  "name": "Digistump Digispark (Default - 16 MHz)", 
+  "upload": {
+    "maximum_ram_size": 512, 
+    "maximum_size": 6012, 
+    "protocol": "digispark"
+  }, 
+  "url": "http://digistump.com/products/1", 
+  "vendor": "Digistump"
+}

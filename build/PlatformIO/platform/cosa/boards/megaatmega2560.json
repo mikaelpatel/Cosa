@@ -1,0 +1,24 @@
+{
+  "build": {
+    "core": "cosa", 
+    "extra_flags": "-DARDUINO_ARCH_AVR -DARDUINO_AVR_MEGA2560", 
+    "f_cpu": "16000000L", 
+    "mcu": "atmega2560", 
+    "variant": "arduino/mega2560"
+  }, 
+  "frameworks": [
+    "arduino", 
+    "cosa", 
+    "simba"
+  ], 
+  "name": "Arduino Mega or Mega 2560 ATmega2560 (Mega 2560)", 
+  "upload": {
+    "maximum_ram_size": 8192, 
+    "maximum_size": 253952, 
+    "protocol": "wiring", 
+    "require_upload_port": true, 
+    "speed": 115200
+  }, 
+  "url": "http://www.arduino.org/products/boards/4-arduino-boards/arduino-mega-2560", 
+  "vendor": "Arduino"
+}
