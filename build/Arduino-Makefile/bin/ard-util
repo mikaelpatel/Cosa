@@ -4,7 +4,7 @@
 # native USB
 #
 # author: jeditekunum
-# version: 2015-04-01-1
+# version: 2016-12-01-1
 
 # Usage:
 #
@@ -230,15 +230,24 @@ if args.disappear >= 0:
 # --reset
 ######################################################################
 
+# See discussion at the end regarding serial reset method
+
 if args.reset:
     wait_for_appear()
     sleep(0.25)
     if args.verbose: sys.stdout.write('Resetting %s ' % args.port)
     if not args.caterina:
         if args.verbose: sys.stdout.write('by setting DTR low for %ss\n' % args.period)
+        # DTR (and RTS) pin is False/high when closed
+        # DTR (and RTS) pin is True/low when opened
         ser = serial.Serial(args.port, 115200)
-        ser.setDTR(True)  # True forces the signal low
+        # !RTS triggers the enhanced reset discussed below when used with the hardware
+        # assist logic.  Normal implementations do not do anything with the RTS signal
+        # so this is a no-op for them.
+        ser.setRTS(False)
+        # Sleep long enough to trigger desired behavior
         sleep(args.period)
+        # DTR pin returns to False/high when closed
         ser.close()
     else:
         if args.verbose: sys.stdout.write('by setting 1200bps for 0.25s\n')
@@ -247,7 +256,10 @@ if args.reset:
         ser.open()
         ser.close()
         previous_inode = os.stat(args.port).st_ino
-        ser.setBaudrate(1200)
+        try:
+            ser.setBaudrate(1200)
+        except AttributeError:
+            ser.baudrate = 1200
         ser.open()
         ser.setDTR(False)
         sleep(0.25)
@@ -260,3 +272,68 @@ if args.reset:
 
 if args.appear:
     wait_for_appear()
+
+######################################################################
+# end
+######################################################################
+
+
+# Special handling of serial method (see POSIX specs):
+#
+# - When a serial port is closed, neither RTS or DTR are asserted. Since the
+#   hardware pin is inverted, this means both RTS and DTR pins are HIGH.
+# - When a serial port is open, both RTS and DTR are asserted and the hardware
+#   pins are LOW.
+#
+# Simple off-the-shelf USB to Serial converters need nothing more than
+#   open; sleep for period; close
+# to have the DTR pin go from HIGH->LOW->HIGH. Unfortunately this also means
+# that the device will reset every time the port is opened.
+#
+# A more advanced solution implemented with hardware assist will not
+# reset the device every time the port is opened. It will only reset
+# the device if the port is open and RTS is toggled. The circuit to
+# accomplish this is roughly (74xx132 is good NAND):
+#
+#       ___
+#       DTR >---NOT----|
+#       ___            NAND---> RESET/"DTR" to device
+#       RTS >----------|
+#
+# Logic is:
+#                                 _____
+# action    | RTS/pin | DTR/pin | RESET
+#-----------|---------|---------|--------
+# closed    |   F/H   |   F/H   |   H
+# opened    |   T/L   |   T/L   |   H
+# (unused)  |   T/L   |   F/H   |   H
+# open+!RTS |   F/H   |   T/L   |   L
+#
+# The code above supports both simple or advanced method. The pins
+# will behave as follows:
+#
+#                         open !RTS       close
+#                            v v          v
+#                            v v          v
+#
+# ___         ---------------+ +----------~---------------
+# RTS pin:                   | |
+#                            +-+
+#
+#
+# ___         ---------------+            +---------------
+# DTR pin:                   |   period+  |
+#                            +------------+
+#
+#
+# _____       ---------------~-+          +---------------
+# RESET pin:                   |  period  |
+#                              +----------+
+#
+#                            ^ ^          ^
+#                            ^ ^          ^
+#                         open !RTS       close
+#
+# Note that this strange behavior is a workaround for device drivers
+# that are not capable of leaving the DTR (or RTS) signals alone during
+# open/close operations.
