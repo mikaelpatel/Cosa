@@ -49,10 +49,10 @@
  * @endcode
  *
  * @section References
- * 1. W5100 Datasheet Version 1.2.4, Sep. 20, 2011,
- * http://www.wiznet.co.kr/UpLoad_Files/ReferenceFiles/W5100_Datasheet_v1.2.4.pdf
- * 2. W3150A+/W5100 Errata Sheet 2.4, Oct. 28, 2013,
- * http://www.wiznet.co.kr/Admin_Root/UpLoad_Files/BoardFiles/3150Aplus_5100_errata_en_v2.4.pdf
+ * 1. W5100 Datasheet Version 1.2.7, July 19, 2016,
+ * http://www.wiznet.co.kr/wp-content/uploads/wiznethome/Chip/W5100/Document/W5100_Datasheet_v1.2.7.pdf
+ * 2. W3150A+/W5100 Errata Sheet 2.6, October 5, 2015,
+ * http://www.wiznet.co.kr/wp-content/uploads/wiznethome/Chip/W5100/Document/3150Aplus_5100_ES_V260E.pdf
  */
 class W5100 : private SPI::Driver {
 public:
@@ -131,7 +131,7 @@ public:
 
 protected:
   /**
-   * Common Registers (chap. 3.1, pp. 14), big-endian 16-bit values.
+   * Common Registers (chap. 3.1, pp. 15), big-endian 16-bit values.
    */
   struct CommonRegister {
     uint8_t MR;			//!< Mode Register.
@@ -155,7 +155,7 @@ protected:
   };
 
   /**
-   * Mode Register bitfields, pp. 19.
+   * Mode Register bitfields, pp. 20.
    */
   enum {
     MR_RST = 0x80,		//!< S/W Reset.
@@ -166,7 +166,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Interrupt Register bitfields, pp. 21.
+   * Interrupt Register bitfields, pp. 22.
    */
   enum {
     IR_CONFLICT = 0x80,		//!< IP Conflict.
@@ -179,7 +179,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Interrupt Mask Register bitfields, pp. 22.
+   * Interrupt Mask Register bitfields, pp. 23.
    */
   enum {
     IMR_CONFLICT = 0x80,    	//!< Mask IP Conflict.
@@ -192,7 +192,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * RX Memory Size Register value, pp. 23.
+   * RX Memory Size Register value, pp. 24.
    */
   enum {
     RMSR_S3_POS = 6,		//!< Socket 3 memory size position.
@@ -206,7 +206,7 @@ protected:
   static const uint16_t COMMON_REGISTER_SIZE = sizeof(CommonRegister);
 
   /**
-   * Socket Registers (chap. 3.2, pp. 15).
+   * Socket Registers (chap. 3.2, pp. 16).
    */
   struct SocketRegister {
     uint8_t MR;			//!< Mode Register.
@@ -232,7 +232,7 @@ protected:
   };
 
   /**
-   * Socket Mode Register bitfields, pp. 25.
+   * Socket Mode Register bitfields, pp. 26.
    */
   enum {
     MR_FLAG_MASK = 0xe0,	//!< Flag mask.
@@ -250,7 +250,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Socket Command Register values, pp. 26-26.
+   * Socket Command Register values, pp. 27-28.
    */
   enum {
     CR_OPEN = 0x01,		//!< Initiate socket according to MR.
@@ -265,7 +265,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Socket Interrupt Register bitfields, pp. 27.
+   * Socket Interrupt Register bitfields, pp. 28-29.
    */
   enum {
     IR_SEND_OK = 0x10,		//!< Send operation is completed.
@@ -276,7 +276,7 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Socket Status Register values, pp. 27.
+   * Socket Status Register values, pp. 29-31.
    */
   enum {
     SR_CLOSED = 0x00,

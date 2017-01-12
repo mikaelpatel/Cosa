@@ -1,9 +1,9 @@
 /**
- * @file W5200.hh
+ * @file W5500.hh
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel, Daniel Sutcliffe
+ * Copyright (C) 2014-2017, Mikael Patel, Daniel Sutcliffe
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,8 +18,8 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#ifndef COSA_W5200_HH
-#define COSA_W5200_HH
+#ifndef COSA_W5500_HH
+#define COSA_W5500_HH
 
 #include "Cosa/Types.h"
 
@@ -28,7 +28,7 @@
 #include "Cosa/Socket.hh"
 
 /**
- * Cosa WIZnet W5200 device driver class. Provides an implementation
+ * Cosa WIZnet W5500 device driver class. Provides an implementation
  * of the Cosa Socket and Cosa IOStream::Device classes. A socket may
  * be bound directly to a Cosa IOStream. The device internal
  * transmitter buffer is used. The buffer is sent on flush (TCP/UDP)
@@ -38,7 +38,7 @@
  *
  * @section Circuit
  * @code
- *                    W5200/Ethernet Shield
+ *                           W5500
  *                       +------------+
  * (D10)--------------29-|CSN         |
  * (D11)--------------28-|MOSI        |
@@ -49,20 +49,20 @@
  * @endcode
  *
  * @section References
- * 1. W5200 Datasheet Version 1.4.0, November 10, 2014,
- * http://www.wiznet.co.kr/wp-content/uploads/wiznethome/Chip/W5200/Documents/W5200_DS_V140E.pdf
- * 2. W5200 Errata Sheet 1.0.6, July 07, 2014,
- * http://www.wiznet.co.kr/wp-content/uploads/wiznethome/Chip/W5200/Documents/W5200_ES_V106E.pdf
+ * 1. W5500 Datasheet Version 1.0.6, December 30, 2014,
+ * http://wizwiki.net/wiki/lib/exe/fetch.php?media=products:w5500:w5500_ds_v106e_141230.pdf
+ * 2. W5500 Application Note 1.1  April 09, 2014,
+ * http://wizwiki.net/wiki/lib/exe/fetch.php?media=products:w5500:w5500_ap_ipraw_v110e.pdf
  */
-class W5200 : private SPI::Driver {
+class W5500 : private SPI::Driver {
 public:
   /**
-   * Construct W5200 device driver with given hardware address, and
+   * Construct W5500 device driver with given hardware address, and
    * chip select.
    * @param[in] mac hardware address (in program memory, default NULL).
    * @param[in] csn chip selection pin (Default D10).
    */
-  W5200(const uint8_t* mac = NULL, Board::DigitalPin csn = Board::D10);
+  W5500(const uint8_t* mac = NULL, Board::DigitalPin csn = Board::D10);
 
   /**
    * Get the current network address and subnet mask.
@@ -72,14 +72,14 @@ public:
   void addr(uint8_t ip[4], uint8_t subnet[4]);
 
   /**
-   * Get DNS network address if W5200 device driver was initiated with
+   * Get DNS network address if W5500 device driver was initiated with
    * hostname and obtained network address from DHCP.
    * @param[in,out] ip network address.
    */
   void dns_addr(uint8_t ip[4]) { memcpy(ip, m_dns, sizeof(m_dns)); }
 
   /**
-   * Initiate W5200 device driver with given hostname. Network address,
+   * Initiate W5500 device driver with given hostname. Network address,
    * subnet mask and gateway should be obtained from DHCP. Returns true
    * if successful otherwise false.
    * @param[in] hostname string in program memory.
@@ -93,7 +93,7 @@ public:
   }
 
   /**
-   * Initiate W5200 device driver with given network address and subnet
+   * Initiate W5500 device driver with given network address and subnet
    * mask. Returns true if successful otherwise false.
    * @param[in] ip network address (Default NULL, 0.0.0.0).
    * @param[in] subnet mask (Default NULL, 0.0.0.0).
@@ -124,14 +124,14 @@ public:
   Socket* socket(Socket::Protocol proto, uint16_t port = 0, uint8_t flag = 0);
 
   /**
-   * Terminate W5200 device driver. Closes all active sockets. Return
+   * Terminate W5500 device driver. Closes all active sockets. Return
    * true if successful otherwise false.
    */
   bool end();
 
 protected:
   /**
-   * Common Registers (chap. 3.1, pp. 15), big-endian 16-bit values.
+   * Common Registers (chap. 3.1, pp. 30), big-endian 16-bit values.
    */
   struct CommonRegister {
     uint8_t MR;			//!< Mode Register.
@@ -139,82 +139,86 @@ protected:
     uint8_t SUBR[4];		//!< Subnet mask Address Register.
     uint8_t SHAR[6];		//!< Source Hardware Address Register.
     uint8_t SIPR[4];		//!< Source IP Address Register.
-    uint8_t reserved1[2];	//!< Reserved.
+    uint16_t INTLEVEL;		//!< Interrupt Low level Timer.
     uint8_t IR;			//!< Interrupt Register.
     uint8_t IMR;		//!< Interrupt Mask Register.
+    uint8_t SIR;		//!< Socket Interrupt Register.
+    uint8_t SIMR;		//!< Socket Interrupt Mask Register.
     uint16_t RTR;		//!< Retry Time Register.
     uint8_t RCR;		//!< Retry Count Register.
-    uint8_t reserved2[2];	//!< Reserved.
-    uint8_t PATR[2];		//!< Authentication Type in PPPoE.
-    uint8_t PPPALGO;		//!< Authentication Algorithm in PPPoE
-    uint8_t VERSIONR;		//!< Chip Version
-    uint8_t reserved3[8];	//!< Reserved.
     uint8_t PTIMER;		//!< PPP LCP Request Timer Register.
     uint8_t PMAGIC;		//!< PPP LCP Magic number.
-    uint8_t reserved4[6];	//!< Reserved.
-    uint8_t INTLEVEL[2];	//!< Interrupt Low Level Timer
-    uint8_t reserved5[2];	//!< Reserved.
-    uint8_t IR2;		//!< Socket Interrupt Register.
-    uint8_t PSTATUS;		//!< Socket Interrupt Register.
-    uint8_t IMR2;		//!< Socket Interrupt Register Mask.
+    uint8_t PHAR[6];		//!< PPP Destination MAC Address
+    uint16_t PSID;		//!< PPP Session Identification.
+    uint16_t PMRU;		//!< PPP Maximum Segment Size.
+    uint8_t UIPR[4];		//!< Unreachable IP Address Register
+    uint16_t UPORTR;		//!< Unreachable Port Register
+    uint8_t PHYCFGR;		//!< PHY COnfiguration
+    uint8_t reserved[10];	//!< Reserved
+    uint8_t VERSIONR;		//!< Chip Version
   };
 
   /**
-   * Mode Register bitfields, pp. 17.
+   * Mode Register bitfields, pp. 33-34.
    */
   enum {
     MR_RST = 0x80,		//!< S/W Reset.
     MR_WOL = 0x20,		//!< Wake on LAN
     MR_PB = 0x10,		//!< Ping Block Mode.
     MR_PPPoE = 0x08,		//!< PPPoE Mode.
+    MR_FARP = 0x02		//!< Force ARP
   } __attribute__((packed));
 
   /**
-   * Interrupt Register bitfields, pp. 18.
+   * Interrupt Register bitfields, pp. 36.
    */
   enum {
     IR_CONFLICT = 0x80,		//!< IP Conflict.
+    IR_UNREACH = 0x40,		//!< Destination Unreachable
     IR_PPPoE = 0x20,		//!< PPPoE Connection Close.
+    IR_MP = 0x10		//!< Magic Packet
   } __attribute__((packed));
 
-  /**
-   * Interrupt Mask Register bitfields, pp. 23.
+  /*
+   * Interrupt Mask Register bitfields, pp. 37.
    */
   enum {
-    IMR_CONFLICT = 0x80,    	//!< Mask IP Conflict.
-    IMR_PPPoE = 0x20,		//!< Mask PPPoE Connection Close.
+    IMR_CONFLICT = 0x80,	//<! IP Conflict.
+    IMR_UNREACH = 0x40,		//!< Destination Unreachable
+    IMR_PPPoE = 0x20,		//!< PPPoE Connection Close.
+    IMR_MP = 0x10		//!< Magic Packet
   } __attribute__((packed));
-
+ 
   /**
-   * Socket Interrupt Register (IR2) bitfields, pp. 22.
+   * Socket Interrupt Register bitfields, pp. 38.
    */
   enum {
-    IR2_S7_INT = 0x80,		//!< Occurrence of Socket 7 Interrupt.
-    IR2_S6_INT = 0x40,		//!< Occurrence of Socket 6 Interrupt.
-    IR2_S5_INT = 0x20,		//!< Occurrence of Socket 5 Interrupt.
-    IR2_S4_INT = 0x10,		//!< Occurrence of Socket 4 Interrupt.
-    IR2_S3_INT = 0x08,		//!< Occurrence of Socket 3 Interrupt.
-    IR2_S2_INT = 0x04,		//!< Occurrence of Socket 2 Interrupt.
-    IR2_S1_INT = 0x02,		//!< Occurrence of Socket 1 Interrupt.
-    IR2_S0_INT = 0x01		//!< Occurrence of Socket 0 Interrupt.
+    SIR_S7_INT = 0x80,		//!< Occurrence of Socket 7 Interrupt.
+    SIR_S6_INT = 0x40,		//!< Occurrence of Socket 6 Interrupt.
+    SIR_S5_INT = 0x20,		//!< Occurrence of Socket 5 Interrupt.
+    SIR_S4_INT = 0x10,		//!< Occurrence of Socket 4 Interrupt.
+    SIR_S3_INT = 0x08,		//!< Occurrence of Socket 3 Interrupt.
+    SIR_S2_INT = 0x04,		//!< Occurrence of Socket 2 Interrupt.
+    SIR_S1_INT = 0x02,		//!< Occurrence of Socket 1 Interrupt.
+    SIR_S0_INT = 0x01		//!< Occurrence of Socket 0 Interrupt.
   } __attribute__((packed));
 
   /**
-   * Interrupt Mask Register (IR2) bitfields, pp. 19.
+   * Socket Interrupt Mask Register bitfields, pp. 38.
    */
   enum {
-    IMR2_S7_INT = 0x80,		//!< Mask occurrence of Socket 7 Interrupt.
-    IMR2_S6_INT = 0x40,		//!< Mask occurrence of Socket 6 Interrupt.
-    IMR2_S5_INT = 0x20,		//!< Mask occurrence of Socket 5 Interrupt.
-    IMR2_S4_INT = 0x10,		//!< Mask occurrence of Socket 4 Interrupt.
-    IMR2_S3_INT = 0x08,		//!< Mask occurrence of Socket 3 Interrupt.
-    IMR2_S2_INT = 0x04,		//!< Mask occurrence of Socket 2 Interrupt.
-    IMR2_S1_INT = 0x02,		//!< Mask occurrence of Socket 1 Interrupt.
-    IMR2_S0_INT = 0x01		//!< Mask occurrence of Socket 0 Interrupt.
+    SIMR_S7_INT = 0x80,		//!< Mask occurrence of Socket 7 Interrupt.
+    SIMR_S6_INT = 0x40,		//!< Mask occurrence of Socket 6 Interrupt.
+    SIMR_S5_INT = 0x20,		//!< Mask occurrence of Socket 5 Interrupt.
+    SIMR_S4_INT = 0x10,		//!< Mask occurrence of Socket 4 Interrupt.
+    SIMR_S3_INT = 0x08,		//!< Mask occurrence of Socket 3 Interrupt.
+    SIMR_S2_INT = 0x04,		//!< Mask occurrence of Socket 2 Interrupt.
+    SIMR_S1_INT = 0x02,		//!< Mask occurrence of Socket 1 Interrupt.
+    SIMR_S0_INT = 0x01		//!< Mask occurrence of Socket 0 Interrupt.
   } __attribute__((packed));
 
   /**
-   * RX/TX Socket Memory Size bitfield pp. 37.
+   * RX/TX Socket Memory Size bitfield pp. 54-55.
    */
   enum {
     MEM_SIZE_00K = 0x00,    	//!< 0KB
@@ -225,12 +229,8 @@ protected:
     MEM_SIZE_16K = 0x10,    	//!< 16KB
   } __attribute__((packed));
 
-  /** Common Register Base Address. */
-  static const uint16_t COMMON_REGISTER_BASE = 0x0000;
-  static const uint16_t COMMON_REGISTER_SIZE = sizeof(CommonRegister);
-
   /**
-   * Socket Registers (chap. 3.2 pp. 16).
+   * Socket Registers (chap. 3.2 pp. 31).
    */
   struct SocketRegister {
     uint8_t MR;			//!< Mode Register.
@@ -242,7 +242,7 @@ protected:
     uint8_t DIPR[4];		//!< Destination IP Address Register.
     uint16_t DPORT;		//!< Destination Port Register.
     uint16_t MSSR;		//!< Maximum Segment Size Register.
-    uint8_t PROTO;		//!< Protocol in IP Raw mode.
+    uint8_t PROTO;		//!< Protocol in IP Raw mode. See W5500 Application Note doc
     uint8_t TOS;		//!< IP TOS.
     uint8_t TTL;		//!< IP TTL.
     uint8_t reserved1[7];	//!< Reserved.
@@ -256,29 +256,28 @@ protected:
     uint16_t RX_WR;		//!< RX Write Pointer Register.
     uint8_t IMR;		//!< Interrupt Mask Register.
     uint16_t FRAG;		//!< Fragment Register.
-    uint8_t reserved2[208];	//!< Reserved.
+    uint8_t KPALVTR;		//!< Keep alive timer.
   };
 
   /**
-   * Socket Mode Register bitfields, pp. 24-25.
+   * Socket Mode Register bitfields, pp 45-46.
    */
   enum {
     MR_FLAG_MASK = 0xe0,	//!< Flag mask.
-    MR_MULTI = 0x80,		//!< Multicasting.
-    MR_MF = 0x40,		//!< MAC Filter.
-    MR_ND = 0x20,		//!< Use No Delay ACK.
-    MR_MC = 0x20,		//!< Multicast version.
-    MR_PROTO_MASK = 0x0f,	//!< Protocol.
+    MR_MULTIMF = 0x80,		//!< Multicast(UDP) MAC Filter(MACRAW).
+    MR_BCASTB = 0x40,		//!< Broadcast Block(UDP & MACRAW)
+    MR_NDMCMMB = 0x20,		//!< No Delayed ACK(TCP) Multicast IGMP version(UDP) Multicast Block(MACRAW).
+    MR_UCASTB = 0x10,		//!< Unicast Block(UDP) IPv6 Block(MACRAW)
+    MR_PROTO_MASK = 0x0f,	//!< Protocol mask.
     MR_PROTO_CLOSED = 0x00,	//!< Closed.
     MR_PROTO_TCP = 0x01,	//!< TCP.
     MR_PROTO_UDP = 0x02,	//!< UDP.
-    MR_PROTO_IPRAW = 0x03,	//!< RAW IP.
+    MR_PROTO_IPRAW = 0x03,	//!< RAW IP. See W5500 Application Note doc
     MR_PROTO_MACRAW = 0x04,	//!< RAW MAC.
-    MR_PROTO_PPPoE = 0x05	//!< PPPoE.
   } __attribute__((packed));
 
   /**
-   * Socket Command Register values, pp. 26-27.
+   * Socket Command Register values, pp. 47-49
    */
   enum {
     CR_OPEN = 0x01,		//!< Initiate socket according to MR.
@@ -289,25 +288,13 @@ protected:
     CR_SEND = 0x20,		//!< Transmit data according to TX_WR.
     CR_SEND_MAC = 0x21,		//!< UDP: Transmit data.
     CR_SEND_KEEP = 0x22,	//!< TCP: Check connection status.
-    CR_RECV = 0x40,		//!< Receiving packet to RX_RD.
-#if 0
-    CR_PCON = 0x23,		//!< PPPoE discovery packet.
-    CR_PDISCON = 0x24,		//!< PPPoE close connection.
-    CR_PCR = 0x25,		//!< In each phase, transmits REQ message.
-    CR_PCN = 0x26,		//!< In each phase, transmits NAK message.
-    CR_PCJ = 0x27		//!< In each phase, transmits REJECT message.
-#endif
+    CR_RECV = 0x40		//!< Receiving packet to RX_RD.
   } __attribute__((packed));
 
   /**
-   * Socket Interrupt Register bitfields, pp. 29.
+   * Socket Interrupt Register bitfields, pp. 49.
    */
   enum {
-#if 0
-    IR_PRECV = 0x80,		//!<.PPP interrupt for option not supported
-    IR_PFAIL = 0x40,		//!< PPP interrupt for PAP auth failed
-    IR_PNEXT = 0x20,		//!< PPP interrupt for phase change during ADSL
-#endif
     IR_SEND_OK = 0x10,		//!< Send operation is completed.
     IR_TIMEOUT = 0x08,		//!< Timeout occured.
     IR_RECV = 0x04,		//!< Received data.
@@ -316,11 +303,10 @@ protected:
   } __attribute__((packed));
 
   /**
-   * Socket Status Register values, pp. 30-32.
+   * Socket Status Register values, pp. 50-51.
    */
   enum {
     SR_CLOSED = 0x00,
-    SR_ARP = 0x01,
     SR_INIT = 0x13,
     SR_LISTEN = 0x14,
     SR_SYNSENT = 0x15,
@@ -334,24 +320,28 @@ protected:
     SR_UDP = 0x22,
     SR_IPRAW = 0x32,
     SR_MACRAW = 0x42,
-    SR_PPPoE = 0x5F
   } __attribute__((packed));
 
-  /** Socket Registers Base Address. */
-  static const uint16_t SOCKET_REGISTER_BASE = 0x4000;
-  static const uint16_t SOCKET_REGISTER_SIZE = sizeof(SocketRegister);
-
-  /** TX Memory Address. */
-  static const uint16_t TX_MEMORY_BASE = 0x8000;
-  static const uint16_t TX_MEMORY_MAX = 0x4000;
-
-  /** RX Memory Address. */
-  static const uint16_t RX_MEMORY_BASE = 0xC000;
-  static const uint16_t RX_MEMORY_MAX = 0x4000;
+  /**
+   * SPI Control Phase bits and masks, pp. 16-17.
+   * CP byte made up of (BSB & RWB & OM & (SN << 5))
+   * For BSB selecting control register no socket number should ever be given.
+   */
+  enum {
+    SPI_CP_BSB_CR = 0x00,	//!< Control Register
+    SPI_CP_BSB_SR = 0x08,	//!< Socket Register
+    SPI_CP_BSB_TX = 0x10,	//!< Socket TX Buffer
+    SPI_CP_BSB_RX = 0x18,	//!< Socket RX Buffer
+    SPI_CP_RWB_RS = 0x00,	//!< Read Access Select
+    SPI_CP_RWB_WS = 0x04,	//!< Write Access Select
+    SPI_CP_OM_VDM = 0x00,	//!< Operation, variable date mode
+    SPI_CP_OM_FD1 = 0x01,	//!< Operation, fixed data 1 byte mode
+    SPI_CP_OM_FD2 = 0x02,	//!< Operation, fixed data 2 byte mode
+    SPI_CP_OM_FD4 = 0x03,	//!< Operation, fixed data 3 byte mode
+  } __attribute__((packed));
 
   /** Socket Buffer Size; 2 Kbyte TX/RX per socket. */
-  static const size_t BUF_MAX = 2048;
-  static const uint16_t BUF_MASK = 0x07ff;
+  static const size_t BUF_MAX = 2048;  // this is initial, max is really 16KB
 
   /** TX Message Size; internal buffer size for flush threshold. */
   static const size_t MSG_MAX = BUF_MAX / 2;
@@ -364,11 +354,11 @@ protected:
 
 public:
   /**
-   * W5200 Single-Chip Internet-enable 10/100 Ethernet Controller Driver.
+   * W5500 Single-Chip Internet-enable 10/100 Ethernet Controller Driver.
    * Implements the Cosa/Socket interface.
    */
   class Driver : public Socket {
-    friend class W5200;
+    friend class W5500;
   public:
     /** Default constructor. */
     Driver() : Socket() {}
@@ -535,19 +525,16 @@ public:
     SocketRegister* m_sreg;
 
     /** Pointer to device context. */
-    W5200* m_dev;
+    W5500* m_dev;
 
-    /** Pointer to socket transmitter buffer. */
-    uint16_t m_tx_buf;
+    /** Socket number. */
+    uint8_t m_snum;
 
     /** Offset in socket transmitter buffer. */
     uint16_t m_tx_offset;
 
     /** Length of message in socket transmitter buffer. */
     uint16_t m_tx_len;
-
-    /** Pointer to socket receiver buffer. */
-    uint16_t m_rx_buf;
 
     /**
      * Read data from the socket receiver buffer to the given buffer
@@ -646,65 +633,65 @@ protected:
   /** DNS server network address (provided by DHCP). */
   uint8_t m_dns[4];
 
-  /** SPI Command codes; or'ed with MSB of length. */
-  enum {
-    OP_WRITE = 0x80,
-    OP_READ = 0x00
-  } __attribute__((packed));
-
   /**
    * Write byte to given address.
    * @param[in] addr address on device.
+   * @param[in] ctl byte specifiying what block of memory to access, BSB of Control Phase byte
    * @param[in] data to write.
    */
-  void write(uint16_t addr, uint8_t data)
+  void write(uint16_t addr, uint8_t ctl, uint8_t data)
   {
-    write(addr, &data, 1);
+    write(addr, ctl, &data, 1);
   }
 
   /**
    * Write data from given buffer with given number of bytes to address.
    * @param[in] addr address on device.
+   * @param[in] ctl byte specifiying what block of memory to access, BSB of Control Phase byte
    * @param[in] buf pointer to buffer.
    * @param[in] len number of bytes to write.
    * @param[in] progmem program memory pointer flag.
    */
-  void write(uint16_t addr, const void* buf, size_t len, bool progmem = false);
+  void write(uint16_t addr, uint8_t ctl, const void* buf, size_t len, bool progmem = false);
 
   /**
    * Write data from given program memory buffer with given number of
    * bytes to address.
    * @param[in] addr address on device.
+   * @param[in] ctl byte specifiying what block of memory to access, BSB of Control Phase byte
    * @param[in] buf pointer to buffer in program memory.
    * @param[in] len number of bytes to write.
    */
-  void write_P(uint16_t addr, const void* buf, size_t len)
+  void write_P(uint16_t addr, uint8_t ctl, const void* buf, size_t len)
   {
-    write(addr, buf, len, true);
+    write(addr, ctl, buf, len, true);
   }
 
   /**
    * Read byte from given address.
    * @param[in] addr address on device.
+   * @param[in] ctl byte specifiying what block of memory to access, BSB of Control Phase byte
    */
-  uint8_t read(uint16_t addr);
+  uint8_t read(uint16_t addr, uint8_t ctl);
 
   /**
    * Read data from given address on device to given buffer with given
    * number of bytes.
    * @param[in] addr address on device.
+   * @param[in] ctl byte specifiying what block of memory to access, BSB of Control Phase byte
    * @param[in] buf pointer to buffer.
    * @param[in] len number of bytes to read.
    */
-  void read(uint16_t addr, void* buf, size_t len);
+  void read(uint16_t addr, uint8_t ctl, void* buf, size_t len);
 
   /**
    * Issue given command to register with given address and await
    * completion.
    * @param[in] addr address on device.
+   * @param[in] ctl byte specifiying what block of memory to access, BSB of Control Phase byte
    * @param[in] cmd command to issue.
    */
-  void issue(uint16_t addr, uint8_t cmd);
+  void issue(uint16_t addr, uint8_t ctl, uint8_t cmd);
 };
 
 #endif
