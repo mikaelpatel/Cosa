@@ -307,6 +307,7 @@ protected:
    */
   enum {
     SR_CLOSED = 0x00,
+    SR_ARP = 0x01,		//!< Undocumented ????
     SR_INIT = 0x13,
     SR_LISTEN = 0x14,
     SR_SYNSENT = 0x15,
@@ -320,6 +321,7 @@ protected:
     SR_UDP = 0x22,
     SR_IPRAW = 0x32,
     SR_MACRAW = 0x42,
+    SR_PPPoE = 0x5F		//!< Undocumented ????
   } __attribute__((packed));
 
   /**

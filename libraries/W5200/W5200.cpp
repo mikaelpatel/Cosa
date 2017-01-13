@@ -25,6 +25,9 @@
 
 #if !defined(BOARD_ATTINY)
 
+#define M_CREG(name) uint16_t(&m_creg->name)
+#define M_SREG(name) uint16_t(&m_sreg->name)
+
 #define W5X00 W5200
 #include <W5X00.inc>
 

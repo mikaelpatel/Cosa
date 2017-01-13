@@ -3,7 +3,7 @@
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel, Daniel Sutcliffe
+ * Copyright (C) 2014-2017, Mikael Patel, Daniel Sutcliffe
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,7 +29,7 @@
 #define M_SREG(name) uint16_t(&m_sreg->name), (SPI_CP_BSB_SR | (m_snum<<5))
 
 #define W5X00 W5500
-#include <W5X00_W5500.inc>
+#include <W5X00.inc>
 
 
 void
@@ -73,17 +73,8 @@ W5500::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
 {
   // Initiate socket structure; buffer allocation and socket register pointer
   for (uint8_t i = 0; i < SOCK_MAX; i++) {
-#if 0
-    SocketRegister* sreg = &((SocketRegister*) SOCKET_REGISTER_BASE)[i];
-#endif
     m_sock[i].m_proto = 0;
-#if 0
-    m_sock[i].m_sreg = sreg;
-    m_sock[i].m_tx_buf = TX_MEMORY_BASE + (i * BUF_MAX);
-    m_sock[i].m_rx_buf = RX_MEMORY_BASE + (i * BUF_MAX);
-#else
     m_sock[i].m_snum = i;
-#endif
     m_sock[i].m_dev = this;
   }
 

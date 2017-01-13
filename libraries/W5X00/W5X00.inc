@@ -18,16 +18,17 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#define M_CREG(name) uint16_t(&m_creg->name)
-#define M_SREG(name) uint16_t(&m_sreg->name)
-
 const uint8_t W5X00::MAC[6] __PROGMEM = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED
 };
 
 W5X00::W5X00(const uint8_t* mac, Board::DigitalPin csn) :
   SPI::Driver(csn, SPI::ACTIVE_LOW, SPI::DIV2_CLOCK, 0, SPI::MSB_ORDER, NULL),
+#ifndef COSA_W5500_HH
   m_creg((CommonRegister*) COMMON_REGISTER_BASE),
+#else
+  m_creg(NULL),
+#endif
   m_local(Socket::DYNAMIC_PORT),
   m_mac(mac)
 {
@@ -36,17 +37,34 @@ W5X00::W5X00(const uint8_t* mac, Board::DigitalPin csn) :
 }
 
 uint8_t
+#ifndef COSA_W5500_HH
 W5X00::read(uint16_t addr)
+#else
+W5X00::read(uint16_t addr, uint8_t ctl)
+#endif
 {
   uint8_t res;
+#ifndef COSA_W5500_HH
   read(addr, &res, 1);
+#else
+  read(addr, ctl, &res, 1);
+#endif
   return (res);
 }
 void
+#ifndef COSA_W5500_HH
 W5X00::issue(uint16_t addr, uint8_t cmd)
+#else
+W5X00::issue(uint16_t addr, uint8_t ctl, uint8_t cmd)
+#endif
 {
+#ifndef COSA_W5500_HH
   write(addr, cmd);
   do DELAY(10); while (read(addr));
+#else
+  write(addr, ctl, cmd);
+  do DELAY(10); while (read(addr, ctl));
+#endif
 }
 
 int
@@ -64,6 +82,7 @@ W5X00::Driver::dev_read(void* buf, size_t len)
   m_dev->read(M_SREG(RX_RD), &ptr, sizeof(ptr));
   ptr = swap(ptr);
 
+#ifndef COSA_W5500_HH
   // Read packet to receiver buffer. Handle possible buffer wrapping
   uint8_t* bp = (uint8_t*) buf;
   uint16_t offset = ptr & BUF_MASK;
@@ -75,6 +94,10 @@ W5X00::Driver::dev_read(void* buf, size_t len)
   else {
     m_dev->read(m_rx_buf + offset, bp, len);
   }
+#else
+  // Read packet to receiver buffer.
+  m_dev->read(ptr, (SPI_CP_BSB_RX | (m_snum<<5)), (uint8_t*) buf, len);
+#endif
 
   // Update receiver buffer pointer
   ptr += len;
@@ -93,6 +116,7 @@ W5X00::Driver::dev_write(const void* buf, size_t len, bool progmem)
   if (UNLIKELY(len == 0)) return (0);
   if (UNLIKELY(len > BUF_MAX)) len = BUF_MAX;
 
+#ifndef COSA_W5500_HH
   // Write packet to transmitter buffer. Handle possible buffer wrapping
   const uint8_t* bp = (const uint8_t*) buf;
   uint16_t offset = m_tx_offset;
@@ -106,6 +130,11 @@ W5X00::Driver::dev_write(const void* buf, size_t len, bool progmem)
     m_dev->write(m_tx_buf + offset, bp, len, progmem);
     m_tx_offset += len;
   }
+#else
+  // Write packet to transmitter buffer.
+  m_dev->write(m_tx_offset, (SPI_CP_BSB_TX | (m_snum<<5)), (const uint8_t*) buf, len, progmem);
+  m_tx_offset += len;
+#endif
 
   // Update transmitter buffer pointer
   m_tx_len += len;
@@ -135,7 +164,10 @@ W5X00::Driver::dev_setup()
   uint16_t ptr;
   m_dev->read(M_SREG(TX_WR), &ptr, sizeof(ptr));
   ptr = swap(ptr);
-  m_tx_offset = ptr & BUF_MASK;
+#ifndef COSA_W5500_HH
+  ptr &= BUF_MASK;
+#endif
+  m_tx_offset = ptr;
   m_tx_len = 0;
 }
 
