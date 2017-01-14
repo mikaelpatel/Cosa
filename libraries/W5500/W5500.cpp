@@ -1,9 +1,9 @@
 /**
- * @file W5200.cpp
+ * @file W5500.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2014-2015, Mikael Patel, Daniel Sutcliffe
+ * Copyright (C) 2014-2017, Mikael Patel, Daniel Sutcliffe
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,30 +18,31 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "W5200.hh"
+#include "W5500.hh"
 #include <W5X00.h>
 #include <DNS.h>
 #include <DHCP.h>
 
 #if !defined(BOARD_ATTINY)
 
-#define M_CREG(name) uint16_t(&m_creg->name)
-#define M_SREG(name) uint16_t(&m_sreg->name)
+#define M_CREG(name) uint16_t(&m_creg->name), SPI_CP_BSB_CR
+#define M_SREG(name) uint16_t(&m_sreg->name), (SPI_CP_BSB_SR | (m_snum<<5))
 
-#define W5X00 W5200
+#define W5X00 W5500
 #include <W5X00.inc>
 
+
 void
-W5200::write(uint16_t addr, const void* buf, size_t len, bool progmem)
+W5500::write(uint16_t addr, uint8_t ctl, const void* buf, size_t len, bool progmem)
 {
-  if (len == 0) return;
+  ctl |= (SPI_CP_RWB_WS | SPI_CP_OM_VDM); // Complete Control Byte by setting to write and variable data length mode
+
   const uint8_t* bp = (const uint8_t*) buf;
   spi.acquire(this);
     spi.begin();
       spi.transfer_start(addr >> 8);
       spi.transfer_next(addr);
-      spi.transfer_next((OP_WRITE | ((len & 0x7F00) >> 8)));
-      spi.transfer_next(len & 0x00FF);
+      spi.transfer_next(ctl);
       for (size_t i = 0; i < len; i++, bp++)
 	spi.transfer_next(progmem ? pgm_read_byte(bp) : *bp);
       spi.transfer_await();
@@ -50,16 +51,16 @@ W5200::write(uint16_t addr, const void* buf, size_t len, bool progmem)
 }
 
 void
-W5200::read(uint16_t addr, void* buf, size_t len)
+W5500::read(uint16_t addr, uint8_t ctl, void* buf, size_t len)
 {
-  if (len == 0) return;
+  ctl |= (SPI_CP_RWB_RS | SPI_CP_OM_VDM); // Complete Control Byte by setting to write and variable data length mode
+
   uint8_t* bp = (uint8_t*) buf;
   spi.acquire(this);
     spi.begin();
       spi.transfer_start(addr >> 8);
       spi.transfer_next(addr);
-      spi.transfer_next((OP_READ | ((len & 0x7F00) >> 8)));
-      spi.transfer_next(len & 0x00FF);
+      spi.transfer_next(ctl);
       spi.transfer_await();
       for (size_t i = 0; i < len; i++, bp++)
 	*bp = spi.transfer(0);
@@ -68,15 +69,12 @@ W5200::read(uint16_t addr, void* buf, size_t len)
 }
 
 bool
-W5200::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
+W5500::begin(uint8_t ip[4], uint8_t subnet[4], uint16_t timeout)
 {
   // Initiate socket structure; buffer allocation and socket register pointer
   for (uint8_t i = 0; i < SOCK_MAX; i++) {
-    SocketRegister* sreg = &((SocketRegister*) SOCKET_REGISTER_BASE)[i];
     m_sock[i].m_proto = 0;
-    m_sock[i].m_sreg = sreg;
-    m_sock[i].m_tx_buf = TX_MEMORY_BASE + (i * BUF_MAX);
-    m_sock[i].m_rx_buf = RX_MEMORY_BASE + (i * BUF_MAX);
+    m_sock[i].m_snum = i;
     m_sock[i].m_dev = this;
   }
 
