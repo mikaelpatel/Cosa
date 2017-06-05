@@ -211,6 +211,13 @@ public:
    */
   static bool service(uint32_t ms = 0L);
 
+  /**
+   * Compare events.
+   * @param[in] t event to compare to this.
+   * @return true(1) if event values match.
+   */
+  bool operator==(const Event &t);
+
 private:
   uint8_t m_type;		//!< Event type.
   Handler* m_target;		//!< Event target object (receiver).

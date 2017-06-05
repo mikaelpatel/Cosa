@@ -38,3 +38,10 @@ Event::service(uint32_t ms)
   return (true);
 }
 
+bool
+Event::operator==(const Event &t)
+{
+  return (m_type == t.m_type &&
+          m_target == t.m_target &&
+          m_value == t.m_value);
+}
