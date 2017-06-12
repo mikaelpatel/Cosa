@@ -24,8 +24,8 @@
  *
  * +-------+
  * | CHAN0 |-------------------------------> ledPin(LED/D13)
- * | CHAN1 |-------------------------------> outPin(D8);
- * | CHAN2 |-------------------------------> dataPin(D9);
+ * | CHAN1 |-------------------------------> outPin(D12);
+ * | CHAN2 |-------------------------------> dataPin(D11);
  * | CHAN3 |-------------------------------> clockPin(D10);
  * |       |
  * | GND   |-------------------------------> GND
@@ -36,9 +36,9 @@
 
 #if defined(HIGH)
 
-const uint8_t outPin = 8;
-const uint8_t dataPin = 9;
 const uint8_t clockPin = 10;
+const uint8_t dataPin = 11;
+const uint8_t outPin = 12;
 const uint8_t ledPin = 13;
 uint8_t data;
 

@@ -91,7 +91,9 @@ void setup()
 
   // Trigger sampling
   ~ledPin;
+  ~ledPin;
   DELAY(50);
+  ~ledPin;
   ~ledPin;
   DELAY(50);
 }
@@ -414,4 +416,3 @@ void loop()
   data = rand(255);
   delay(1000);
 }
-
