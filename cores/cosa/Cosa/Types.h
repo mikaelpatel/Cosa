@@ -391,6 +391,11 @@ inline uint8_t lock(condvar_t &cond)
 struct iovec_t {
   void* buf;			//!< Buffer pointer.
   size_t size;			//!< Size of buffer in bytes.
+  iovec_t(void* buf = NULL, size_t size = 0)
+  {
+    this->buf = buf;
+    this->size = size;
+  }
 };
 
 /**

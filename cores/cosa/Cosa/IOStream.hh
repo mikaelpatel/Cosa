@@ -693,6 +693,17 @@ public:
     return (*this);
   }
 
+  /**
+   * Print contents of iovector to stream.
+   * @param[in] vec iovector.
+   * @return iostream.
+   */
+  IOStream& operator<<(const iovec_t* vec)
+  {
+    if (m_dev != NULL) m_dev->write(vec);
+    return (*this);
+  }
+
 #if !defined(COSA_IOSTREAM_STDLIB_DTOA)
   /* Faster version of standard number to string conversion */
   static char* ultoa(unsigned long __val, char *__s, int base);
