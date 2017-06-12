@@ -1,0 +1,1415 @@
+Tue Dec 6 15:06:51 CET 2016: build/CosaBuild.ino
+Program:     120 bytes (1.5% Full)
+Data:          0 bytes (0.0% Full)
+Tue Dec 6 15:06:52 CET 2016: examples/Analyzer/ArduinoAnalyzerDigitalPin/ArduinoAnalyzerDigitalPin.ino
+Program:     120 bytes (1.5% Full)
+Data:          0 bytes (0.0% Full)
+Tue Dec 6 15:06:54 CET 2016: examples/Analyzer/CosaAnalyzerFlush/CosaAnalyzerFlush.ino
+Program:    2890 bytes (35.3% Full)
+Data:        101 bytes (19.7% Full)
+Tue Dec 6 15:06:55 CET 2016: examples/Analyzer/CosaAnalyzerGPIO/CosaAnalyzerGPIO.ino
+CosaAnalyzerGPIO.ino:50:13: error: 'D12' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:51:14: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:52:15: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:71:14: error: 'SLEEP_MODE_EXT_STANDBY' was not declared in this scope
+CosaAnalyzerGPIO.ino:278:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:279:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:280:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:281:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:282:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:283:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:284:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:285:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:292:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:293:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:294:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:295:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:296:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:297:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:298:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:299:16: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:308:17: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:309:17: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:310:17: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:320:33: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:320:66: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:321:17: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:322:17: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:332:17: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:333:18: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:334:18: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:344:33: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:344:66: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:345:18: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:346:18: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:355:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:356:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:357:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:358:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:359:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:360:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:361:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:362:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:363:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:364:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:365:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:366:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:367:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:368:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:369:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:370:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:371:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:372:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:373:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:374:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:375:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:376:15: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:377:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:378:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:386:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:386:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:387:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:388:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:389:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:389:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:390:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:391:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:392:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:392:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:393:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:394:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:395:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:395:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:396:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:397:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:398:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:398:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:399:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:400:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:401:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:401:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:402:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:403:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:404:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:404:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:405:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:406:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:407:32: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:407:65: error: 'D11' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:408:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:409:16: error: 'D10' is not a member of 'Board'
+CosaAnalyzerGPIO.ino:413:15: error: 'D11' is not a member of 'Board'
+Tue Dec 6 15:06:56 CET 2016: examples/Analyzer/CosaAnalyzerJob/CosaAnalyzerJob.ino
+CosaAnalyzerJob.ino:91:21: error: 'D13' is not a member of 'Board'
+CosaAnalyzerJob.ino:95:21: error: 'D12' is not a member of 'Board'
+CosaAnalyzerJob.ino:96:21: error: 'D12' is not a member of 'Board'
+CosaAnalyzerJob.ino:97:21: error: 'D12' is not a member of 'Board'
+CosaAnalyzerJob.ino:98:21: error: 'D12' is not a member of 'Board'
+CosaAnalyzerJob.ino:124:14: error: 'SLEEP_MODE_EXT_STANDBY' was not declared in this scope
+Tue Dec 6 15:06:57 CET 2016: examples/Analyzer/CosaAnalyzerPeriodic/CosaAnalyzerPeriodic.ino
+CosaAnalyzerPeriodic.ino:107:33: error: 'D13' is not a member of 'Board'
+CosaAnalyzerPeriodic.ino:108:33: error: 'D12' is not a member of 'Board'
+CosaAnalyzerPeriodic.ino:109:33: error: 'D11' is not a member of 'Board'
+CosaAnalyzerPeriodic.ino:143:14: error: 'SLEEP_MODE_EXT_STANDBY' was not declared in this scope
+Tue Dec 6 15:06:58 CET 2016: examples/Analyzer/CosaAnalyzerPulse/CosaAnalyzerPulse.ino
+CosaAnalyzerPulse.ino:106:26: error: 'D13' is not a member of 'Board'
+CosaAnalyzerPulse.ino:107:26: error: 'D12' is not a member of 'Board'
+CosaAnalyzerPulse.ino:108:26: error: 'D11' is not a member of 'Board'
+CosaAnalyzerPulse.ino:139:14: error: 'SLEEP_MODE_EXT_STANDBY' was not declared in this scope
+Tue Dec 6 15:06:59 CET 2016: examples/Analyzer/CosaAnalyzerServo/CosaAnalyzerServo.ino
+CosaAnalyzerServo.ino:144:22: error: 'D12' is not a member of 'Board'
+Tue Dec 6 15:07:00 CET 2016: examples/Benchmarks/CosaBenchmarkDataLogger/CosaBenchmarkDataLogger.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:07:02 CET 2016: examples/Benchmarks/CosaBenchmarkFSM/CosaBenchmarkFSM.ino
+Program:    5914 bytes (72.2% Full)
+Data:        229 bytes (44.7% Full)
+Tue Dec 6 15:07:04 CET 2016: examples/Benchmarks/CosaBenchmarkGPIO/CosaBenchmarkGPIO.ino
+CosaBenchmarkGPIO.ino:33:12: error: 'D7' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:34:13: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:35:14: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:36:15: error: 'D10' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:111:27: error: 'D7' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:124:17: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:136:17: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:136:40: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:146:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:159:17: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:160:17: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:171:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:172:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:184:17: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:184:40: error: 'D7' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:202:19: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:203:19: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:204:19: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:220:19: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:221:20: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:222:20: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:256:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:257:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:258:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:259:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:260:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:261:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:262:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:263:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:264:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:265:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:266:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:267:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:268:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:269:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:270:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:271:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:272:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:273:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:274:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:275:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:276:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:277:17: error: 'D9' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:278:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkGPIO.ino:279:18: error: 'D8' is not a member of 'Board'
+Tue Dec 6 15:07:05 CET 2016: examples/Benchmarks/CosaBenchmarkPins/CosaBenchmarkPins.ino
+CosaBenchmarkPins.ino:59:16: error: 'D7' is not a member of 'Board'
+CosaBenchmarkPins.ino:60:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:61:19: error: 'D9' is not a member of 'Board'
+CosaBenchmarkPins.ino:62:20: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:200:34: error: 'D7' is not a member of 'Board'
+CosaBenchmarkPins.ino:206:31: error: 'D7' is not a member of 'Board'
+CosaBenchmarkPins.ino:261:22: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:262:22: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:281:23: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:282:23: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:287:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:288:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:293:19: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:294:19: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:331:22: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:331:49: error: 'D7' is not a member of 'Board'
+CosaBenchmarkPins.ino:336:24: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:337:24: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:339:24: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:344:18: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:344:42: error: 'D7' is not a member of 'Board'
+CosaBenchmarkPins.ino:349:21: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:350:20: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:352:20: error: 'D8' is not a member of 'Board'
+CosaBenchmarkPins.ino:421:24: error: 'D9' is not a member of 'Board'
+CosaBenchmarkPins.ino:422:24: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:423:24: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:430:24: error: 'D9' is not a member of 'Board'
+CosaBenchmarkPins.ino:431:25: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:432:25: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:467:20: error: 'D9' is not a member of 'Board'
+CosaBenchmarkPins.ino:468:20: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:469:20: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:476:20: error: 'D9' is not a member of 'Board'
+CosaBenchmarkPins.ino:477:21: error: 'D10' is not a member of 'Board'
+CosaBenchmarkPins.ino:478:21: error: 'D10' is not a member of 'Board'
+Tue Dec 6 15:07:06 CET 2016: examples/Benchmarks/CosaBenchmarkRTT/CosaBenchmarkRTT.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:07:08 CET 2016: examples/Benchmarks/CosaBenchmarkSizeOf/CosaBenchmarkSizeOf.ino
+CosaBenchmarkSizeOf.ino:109:16: error: 'InputCapture' was not declared in this scope
+CosaBenchmarkSizeOf.ino:113:24: error: 'UART' was not declared in this scope
+CosaBenchmarkSizeOf.ino:113:28: error: template argument 1 is invalid
+Tue Dec 6 15:07:09 CET 2016: examples/Benchmarks/CosaBenchmarkUARTburst/CosaBenchmarkUARTburst.ino
+Program:    7342 bytes (89.6% Full)
+Data:        138 bytes (27.0% Full)
+Tue Dec 6 15:07:11 CET 2016: examples/Benchmarks/CosaBenchmarkUART/CosaBenchmarkUART.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:07:13 CET 2016: examples/Blink/CosaBlinkClassic/CosaBlinkClassic.ino
+Program:     336 bytes (4.1% Full)
+Data:          4 bytes (0.8% Full)
+Tue Dec 6 15:07:15 CET 2016: examples/Blink/CosaBlink/CosaBlink.ino
+Program:    1114 bytes (13.6% Full)
+Data:         25 bytes (4.9% Full)
+Tue Dec 6 15:07:16 CET 2016: examples/Blink/CosaBlinkFSM/CosaBlinkFSM.ino
+CosaBlinkFSM.ino:56:39: error: 'D6' is not a member of 'Board'
+CosaBlinkFSM.ino:57:38: error: 'D7' is not a member of 'Board'
+CosaBlinkFSM.ino:149:44: error: 'D6' is not a member of 'Board'
+CosaBlinkFSM.ino:149:55: error: 'D7' is not a member of 'Board'
+CosaBlinkFSM.ino:150:32: error: 'D8' is not a member of 'Board'
+CosaBlinkFSM.ino:150:43: error: 'D9' is not a member of 'Board'
+CosaBlinkFSM.ino:150:54: error: 'D10' is not a member of 'Board'
+Tue Dec 6 15:07:17 CET 2016: examples/Blink/CosaBlinkInterrupt/CosaBlinkInterrupt.ino
+Program:    1850 bytes (22.6% Full)
+Data:        117 bytes (22.9% Full)
+Tue Dec 6 15:07:19 CET 2016: examples/Blink/CosaBlinkLED/CosaBlinkLED.ino
+Program:    1800 bytes (22.0% Full)
+Data:        110 bytes (21.5% Full)
+Tue Dec 6 15:07:20 CET 2016: examples/Blink/CosaBlinkMinimal/CosaBlinkMinimal.ino
+Program:     174 bytes (2.1% Full)
+Data:          0 bytes (0.0% Full)
+Tue Dec 6 15:07:22 CET 2016: examples/Blink/CosaBlinkPeriodicBlock/CosaBlinkPeriodicBlock.ino
+Program:     766 bytes (9.4% Full)
+Data:         29 bytes (5.7% Full)
+Tue Dec 6 15:07:23 CET 2016: examples/Blink/CosaBlinkPeriodic/CosaBlinkPeriodic.ino
+Program:    2016 bytes (24.6% Full)
+Data:        159 bytes (31.1% Full)
+Tue Dec 6 15:07:25 CET 2016: examples/Blink/CosaBlinkProtoThread/CosaBlinkProtoThread.ino
+Program:    2118 bytes (25.9% Full)
+Data:        118 bytes (23.0% Full)
+Tue Dec 6 15:07:27 CET 2016: examples/Blink/CosaBlinkRandom/CosaBlinkRandom.ino
+Program:    1008 bytes (12.3% Full)
+Data:          8 bytes (1.6% Full)
+Tue Dec 6 15:07:28 CET 2016: examples/Blink/CosaBlinkTemp/CosaBlinkTemp.ino
+Program:    3000 bytes (36.6% Full)
+Data:         73 bytes (14.3% Full)
+Tue Dec 6 15:07:30 CET 2016: examples/Blink/CosaBlinkThread/CosaBlinkThread.ino
+Program:    2084 bytes (25.4% Full)
+Data:        161 bytes (31.4% Full)
+Tue Dec 6 15:07:31 CET 2016: examples/Blink/CosaBlinkTimeout/CosaBlinkTimeout.ino
+Program:    1820 bytes (22.2% Full)
+Data:        179 bytes (35.0% Full)
+Tue Dec 6 15:07:33 CET 2016: examples/Blink/CosaBlinkWatchdog/CosaBlinkWatchdog.ino
+Program:     594 bytes (7.3% Full)
+Data:         13 bytes (2.5% Full)
+Tue Dec 6 15:07:35 CET 2016: examples/Build/CosaSizeDATA/CosaSizeDATA.ino
+Program:    2072 bytes (25.3% Full)
+Data:        340 bytes (66.4% Full)
+Tue Dec 6 15:07:37 CET 2016: examples/Build/CosaSizeEEPROM/CosaSizeEEPROM.ino
+Program:    4014 bytes (49.0% Full)
+Data:        118 bytes (23.0% Full)
+EEPROM:      512 bytes (100.0% Full)
+Tue Dec 6 15:07:38 CET 2016: examples/Compiler/CosaBitfields/CosaBitfields.ino
+Program:    4112 bytes (50.2% Full)
+Data:        107 bytes (20.9% Full)
+Tue Dec 6 15:07:40 CET 2016: examples/Compiler/CosaDiff/CosaDiff.ino
+Program:    4704 bytes (57.4% Full)
+Data:        107 bytes (20.9% Full)
+Tue Dec 6 15:07:42 CET 2016: examples/Compiler/CosaMath/CosaMath.ino
+Program:    6850 bytes (83.6% Full)
+Data:        126 bytes (24.6% Full)
+Tue Dec 6 15:07:43 CET 2016: examples/Compiler/CosaMatrix/CosaMatrix.ino
+Program:    3948 bytes (48.2% Full)
+Data:        109 bytes (21.3% Full)
+EEPROM:       54 bytes (10.5% Full)
+Tue Dec 6 15:07:45 CET 2016: examples/Compiler/CosaPSTR/CosaPSTR.ino
+Program:    5504 bytes (67.2% Full)
+Data:        129 bytes (25.2% Full)
+Tue Dec 6 15:07:47 CET 2016: examples/Compiler/CosaSRAM/CosaSRAM.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:203:21: error: 'UART_MAX' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:74:11: error: 'UART' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:79:5: error: 'uart' was not declared in this scope
+Tue Dec 6 15:07:47 CET 2016: examples/Compiler/CosaSwap/CosaSwap.ino
+Program:    5536 bytes (67.6% Full)
+Data:        111 bytes (21.7% Full)
+Tue Dec 6 15:07:49 CET 2016: examples/Compiler/CosaSwitch/CosaSwitch.ino
+Program:    6086 bytes (74.3% Full)
+Data:        132 bytes (25.8% Full)
+Tue Dec 6 15:07:51 CET 2016: examples/LCD/CosaHD44780/CosaHD44780.ino
+Program:    7298 bytes (89.1% Full)
+Data:        224 bytes (43.8% Full)
+Tue Dec 6 15:07:53 CET 2016: examples/LCD/CosaLCD10DOF/CosaLCD10DOF.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:07:56 CET 2016: examples/LCD/CosaLCDbench/CosaLCDbench.ino
+Program:    7612 bytes (92.9% Full)
+Data:        259 bytes (50.6% Full)
+Tue Dec 6 15:07:59 CET 2016: examples/LCD/CosaLCDclock/CosaLCDclock.ino
+Program:    7784 bytes (95.0% Full)
+Data:        222 bytes (43.4% Full)
+Tue Dec 6 15:08:01 CET 2016: examples/LCD/CosaLCDhbar/CosaLCDhbar.ino
+Program:    7712 bytes (94.1% Full)
+Data:        252 bytes (49.2% Full)
+Tue Dec 6 15:08:03 CET 2016: examples/LCD/CosaLCDkeypad/CosaLCDkeypad.ino
+CosaLCDkeypad.ino:90:10: error: 'Port4b' in 'class HD44780' does not name a type
+CosaLCDkeypad.ino:91:14: error: 'port' was not declared in this scope
+Tue Dec 6 15:08:04 CET 2016: examples/LCD/CosaLCDmenu/CosaLCDmenu.ino
+CosaLCDmenu.ino:43:10: error: 'Port4b' in 'class HD44780' does not name a type
+CosaLCDmenu.ino:70:14: error: 'port' was not declared in this scope
+Tue Dec 6 15:08:05 CET 2016: examples/LCD/CosaLCDsize/CosaLCDsize.ino
+CosaLCDsize.ino:65:10: error: 'Port4b' in 'class HD44780' does not name a type
+CosaLCDsize.ino:94:14: error: 'port' was not declared in this scope
+Tue Dec 6 15:08:07 CET 2016: examples/LCD/CosaLCDslave/CosaLCDslave.ino
+CosaLCDslave.ino:31:10: error: 'Port4b' in 'class HD44780' does not name a type
+CosaLCDslave.ino:32:14: error: 'port' was not declared in this scope
+Tue Dec 6 15:08:08 CET 2016: examples/LCD/CosaLCDspeed/CosaLCDspeed.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:08:10 CET 2016: examples/LCD/CosaLCDtemp/CosaLCDtemp.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:08:13 CET 2016: examples/LCD/CosaLCDterm/CosaLCDterm.ino
+Program:    5800 bytes (70.8% Full)
+Data:        269 bytes (52.5% Full)
+Tue Dec 6 15:08:15 CET 2016: examples/LCD/CosaLCDvbar/CosaLCDvbar.ino
+Program:    7220 bytes (88.1% Full)
+Data:        217 bytes (42.4% Full)
+Tue Dec 6 15:08:17 CET 2016: examples/LCD/CosaLCDverify/CosaLCDverify.ino
+Program:     120 bytes (1.5% Full)
+Data:          0 bytes (0.0% Full)
+Tue Dec 6 15:08:20 CET 2016: examples/LCD/CosaST7565/CosaST7565.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:08:23 CET 2016: examples/Pins/CosaAnalogComparator/CosaAnalogComparator.ino
+Program:    3720 bytes (45.4% Full)
+Data:        161 bytes (31.4% Full)
+Tue Dec 6 15:08:24 CET 2016: examples/Pins/CosaAnalogPins/CosaAnalogPins.ino
+Program:    4752 bytes (58.0% Full)
+Data:        196 bytes (38.3% Full)
+Tue Dec 6 15:08:26 CET 2016: examples/Pins/CosaButton/CosaButton.ino
+Program:    5886 bytes (71.9% Full)
+Data:        270 bytes (52.7% Full)
+Tue Dec 6 15:08:28 CET 2016: examples/Pins/CosaGPIO/CosaGPIO.ino
+Program:    3378 bytes (41.2% Full)
+Data:         99 bytes (19.3% Full)
+Tue Dec 6 15:08:29 CET 2016: examples/Pins/CosaInputCapture/CosaInputCapture.ino
+CosaInputCapture.ino:38:35: error: expected class-name before '{' token
+CosaInputCapture.ino:40:13: error: class 'Probe' does not have any field named 'InputCapture'
+CosaInputCapture.ino:69:3: error: 'InputCapture' has not been declared
+CosaInputCapture.ino:77:9: error: 'class Probe' has no member named 'enable'
+CosaInputCapture.ino:79:9: error: 'class Probe' has no member named 'disable'
+Tue Dec 6 15:08:30 CET 2016: examples/Pins/CosaPinChangeInterrupt/CosaPinChangeInterrupt.ino
+CosaPinChangeInterrupt.ino:56:13: error: 'PCI7' is not a member of 'Board'
+Tue Dec 6 15:08:31 CET 2016: examples/Pins/CosaPins/CosaPins.ino
+CosaPins.ino:90:16: error: 'PCI9' is not a member of 'Board'
+CosaPins.ino:92:16: error: 'PCI15' is not a member of 'Board'
+CosaPins.ino:93:15: error: 'PWM2' is not a member of 'Board'
+CosaPins.ino:94:19: error: 'D7' is not a member of 'Board'
+Tue Dec 6 15:08:32 CET 2016: examples/Pins/CosaPWMPin/CosaPWMPin.ino
+Program:    3474 bytes (42.4% Full)
+Data:        111 bytes (21.7% Full)
+Tue Dec 6 15:08:34 CET 2016: examples/Sandbox/CosaACS712T/CosaACS712T.ino
+Program:    3902 bytes (47.6% Full)
+Data:        168 bytes (32.8% Full)
+Tue Dec 6 15:08:36 CET 2016: examples/Sandbox/CosaBitSet/CosaBitSet.ino
+Program:    4754 bytes (58.0% Full)
+Data:        119 bytes (23.2% Full)
+Tue Dec 6 15:08:38 CET 2016: examples/Sandbox/CosaBitSetString/CosaBitSetString.ino
+Program:    3666 bytes (44.8% Full)
+Data:        140 bytes (27.3% Full)
+Tue Dec 6 15:08:39 CET 2016: examples/Sandbox/CosaConfig/CosaConfig.ino
+Program:    4278 bytes (52.2% Full)
+Data:        100 bytes (19.5% Full)
+Tue Dec 6 15:08:41 CET 2016: examples/Sandbox/CosaEEPROM/CosaEEPROM.ino
+Program:    5704 bytes (69.6% Full)
+Data:        210 bytes (41.0% Full)
+EEPROM:      148 bytes (28.9% Full)
+Tue Dec 6 15:08:43 CET 2016: examples/Sandbox/CosaIOBuffer/CosaIOBuffer.ino
+Program:    7912 bytes (96.6% Full)
+Data:        162 bytes (31.6% Full)
+Tue Dec 6 15:08:45 CET 2016: examples/Sandbox/CosaIOEvent/CosaIOEvent.ino
+CosaIOEvent.ino:30:18: error: 'UART' was not declared in this scope
+CosaIOEvent.ino:30:37: error: template argument 1 is invalid
+CosaIOEvent.ino:30:45: error: invalid type in declaration before ';' token
+CosaIOEvent.ino:38:17: error: request for member 'available' in '* buf', which is of non-class type 'Buffer {aka int}'
+CosaIOEvent.ino:38:51: error: request for member 'getchar' in '* buf', which is of non-class type 'Buffer {aka int}'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/IOEvent.hh:36:7: error: base type 'int' fails to be a struct or class type
+CosaIOEvent.ino:45:1: error: 'UART' does not name a type
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/IOEvent.hh:41:65: error: type 'int' is not a direct base of 'IOEvent<int>'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/IOEvent.hh:51:32: error: 'putchar' is not a member of 'int'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/IOEvent.hh:52:44: error: 'room' is not a member of 'int'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/IOEvent.hh:64:31: error: 'getchar' is not a member of 'int'
+Tue Dec 6 15:08:46 CET 2016: examples/Sandbox/CosaLowPower/CosaLowPower.ino
+CosaLowPower.ino:89:3: error: 'PORTC' was not declared in this scope
+CosaLowPower.ino:90:3: error: 'DDRC' was not declared in this scope
+CosaLowPower.ino:91:3: error: 'PORTD' was not declared in this scope
+CosaLowPower.ino:92:3: error: 'DDRD' was not declared in this scope
+Tue Dec 6 15:08:47 CET 2016: examples/Sandbox/CosaNucleoActor/CosaNucleoActor.ino
+Program:    8152 bytes (99.5% Full)
+Data:        388 bytes (75.8% Full)
+Tue Dec 6 15:08:49 CET 2016: examples/Sandbox/CosaPeriodicBlock/CosaPeriodicBlock.ino
+Program:    3766 bytes (46.0% Full)
+Data:        153 bytes (29.9% Full)
+Tue Dec 6 15:08:50 CET 2016: examples/Sandbox/CosaPingPong/CosaPingPong.ino
+Program:    4894 bytes (59.7% Full)
+Data:        245 bytes (47.9% Full)
+Tue Dec 6 15:08:52 CET 2016: examples/Sandbox/CosaRestart/CosaRestart.ino
+Program:    4192 bytes (51.2% Full)
+Data:        109 bytes (21.3% Full)
+Tue Dec 6 15:08:54 CET 2016: examples/Sandbox/CosaRF433/CosaRF433.ino
+Program:    1206 bytes (14.7% Full)
+Data:         27 bytes (5.3% Full)
+Tue Dec 6 15:08:56 CET 2016: examples/Sandbox/CosaSoftSRPI/CosaSoftSRPI.ino
+Program:    3390 bytes (41.4% Full)
+Data:        107 bytes (20.9% Full)
+Tue Dec 6 15:08:57 CET 2016: examples/Sandbox/CosaSoftSRPO/CosaSoftSRPO.ino
+Program:     992 bytes (12.1% Full)
+Data:         21 bytes (4.1% Full)
+Tue Dec 6 15:08:59 CET 2016: examples/Sandbox/CosaSPIclock/CosaSPIclock.ino
+Program:    6654 bytes (81.2% Full)
+Data:        127 bytes (24.8% Full)
+Tue Dec 6 15:09:01 CET 2016: examples/Sandbox/CosaSPI/CosaSPI.ino
+CosaSPI.ino:57:17: error: 'D6' is not a member of 'Board'
+Tue Dec 6 15:09:01 CET 2016: examples/Sandbox/CosaString/CosaString.ino
+Program:    6972 bytes (85.1% Full)
+Data:        107 bytes (20.9% Full)
+Tue Dec 6 15:09:03 CET 2016: examples/Sandbox/CosaTermostat/CosaTermostat.ino
+Program:    6578 bytes (80.3% Full)
+Data:        187 bytes (36.5% Full)
+Tue Dec 6 15:09:05 CET 2016: examples/Sandbox/CosaTone/CosaTone.ino
+CosaTone.ino:29:2: error: #error "CosaTone: board not supported"
+ #error "CosaTone: board not supported"
+Tue Dec 6 15:09:06 CET 2016: examples/Sandbox/CosaVCC/CosaVCC.ino
+Program:    5152 bytes (62.9% Full)
+Data:        284 bytes (55.5% Full)
+Tue Dec 6 15:09:08 CET 2016: examples/Sandbox/CosaWatchdogJob/CosaWatchdogJob.ino
+Program:    4876 bytes (59.5% Full)
+Data:        273 bytes (53.3% Full)
+Tue Dec 6 15:09:10 CET 2016: examples/Time/CosaAlarm/CosaAlarm.ino
+Program:    5936 bytes (72.5% Full)
+Data:        259 bytes (50.6% Full)
+Tue Dec 6 15:09:12 CET 2016: examples/Time/CosaDelay/CosaDelay.ino
+CosaDelay.ino:37:20: error: 'SLEEP_MODE_EXT_STANDBY' was not declared in this scope
+Tue Dec 6 15:09:13 CET 2016: examples/Time/CosaJobs/CosaJobs.ino
+Program:    5462 bytes (66.7% Full)
+Data:        247 bytes (48.2% Full)
+Tue Dec 6 15:09:14 CET 2016: examples/Time/CosaMicros/CosaMicros.ino
+Program:    3724 bytes (45.5% Full)
+Data:         97 bytes (18.9% Full)
+Tue Dec 6 15:09:16 CET 2016: examples/Time/CosaPeriodic/CosaPeriodic.ino
+Program:    4560 bytes (55.7% Full)
+Data:        203 bytes (39.6% Full)
+Tue Dec 6 15:09:18 CET 2016: examples/Time/CosaSince/CosaSince.ino
+Program:    4858 bytes (59.3% Full)
+Data:        186 bytes (36.3% Full)
+Tue Dec 6 15:09:19 CET 2016: examples/Time/CosaTime/CosaTime.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:09:22 CET 2016: examples/Time/CosaTimeLCD/CosaTimeLCD.ino
+CosaTimeLCD.ino:36:10: error: 'Port4b' in 'class HD44780' does not name a type
+CosaTimeLCD.ino:63:14: error: 'port' was not declared in this scope
+Tue Dec 6 15:09:23 CET 2016: examples/Tools/CosaAutoCalibration/CosaAutoCalibration.ino
+Program:    5040 bytes (61.5% Full)
+Data:        212 bytes (41.4% Full)
+Tue Dec 6 15:09:25 CET 2016: examples/Tools/CosaClockCalibration/CosaClockCalibration.ino
+CosaClockCalibration.ino:137:20: error: 'EXT1' is not a member of 'Board'
+CosaClockCalibration.ino:163:23: error: 'D12' is not a member of 'Board'
+CosaClockCalibration.ino:164:21: error: 'D11' is not a member of 'Board'
+Tue Dec 6 15:09:26 CET 2016: examples/Tools/CosaOWIdebug/CosaOWIdebug.ino
+Program:    4838 bytes (59.1% Full)
+Data:        111 bytes (21.7% Full)
+Tue Dec 6 15:09:27 CET 2016: examples/Tools/CosaOWIrom/CosaOWIrom.ino
+Program:    4040 bytes (49.3% Full)
+Data:         98 bytes (19.1% Full)
+Tue Dec 6 15:09:29 CET 2016: examples/Tools/CosaPinScanner/CosaPinScanner.ino
+Program:    3362 bytes (41.0% Full)
+Data:         93 bytes (18.2% Full)
+Tue Dec 6 15:09:31 CET 2016: examples/Tools/CosaProbe/CosaProbe.ino
+Program:    4600 bytes (56.2% Full)
+Data:        401 bytes (78.3% Full)
+Tue Dec 6 15:09:33 CET 2016: examples/Tools/CosaRF24scanner/CosaRF24scanner.ino
+CosaRF24scanner.ino:44:38: error: expected class-name before '{' token
+CosaRF24scanner.ino:52:19: error: class 'RF24scanner' does not have any field named 'NRF24L01P'
+CosaRF24scanner.ino:82:9: error: 'CONFIG' was not declared in this scope
+CosaRF24scanner.ino:82:22: error: 'EN_CRC' was not declared in this scope
+CosaRF24scanner.ino:82:36: error: 'CRCO' was not declared in this scope
+CosaRF24scanner.ino:82:48: error: 'PWR_UP' was not declared in this scope
+CosaRF24scanner.ino:82:62: error: 'PRIM_RX' was not declared in this scope
+CosaRF24scanner.ino:82:71: error: 'write' was not declared in this scope
+CosaRF24scanner.ino:87:13: error: 'RF_CH' was not declared in this scope
+CosaRF24scanner.ino:88:7: error: 'm_ce' was not declared in this scope
+CosaRF24scanner.ino:90:29: error: 'RPD' was not declared in this scope
+CosaRF24scanner.ino:90:32: error: 'read' was not declared in this scope
+CosaRF24scanner.ino:126:18: error: 'class RF24scanner' has no member named 'begin'
+Tue Dec 6 15:09:34 CET 2016: examples/Tools/CosaTWIscanner/CosaTWIscanner.ino
+Program:    6082 bytes (74.2% Full)
+Data:        174 bytes (34.0% Full)
+Tue Dec 6 15:09:36 CET 2016: examples/TWI/Cosa10DOF/Cosa10DOF.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:09:38 CET 2016: examples/TWI/CosaTWIKeyPad/CosaTWIKeyPad.ino
+Program:    5642 bytes (68.9% Full)
+Data:        205 bytes (40.0% Full)
+Tue Dec 6 15:09:40 CET 2016: examples/TWI/CosaTWImaster/CosaTWImaster.ino
+Program:    7136 bytes (87.1% Full)
+Data:        218 bytes (42.6% Full)
+Tue Dec 6 15:09:42 CET 2016: examples/TWI/CosaTWIremotePinMaster/CosaTWIremotePinMaster.ino
+Program:    5242 bytes (64.0% Full)
+Data:        206 bytes (40.2% Full)
+Tue Dec 6 15:09:43 CET 2016: examples/TWI/CosaTWIremotePinSlave/CosaTWIremotePinSlave.ino
+Program:    2080 bytes (25.4% Full)
+Data:        127 bytes (24.8% Full)
+Tue Dec 6 15:09:45 CET 2016: examples/TWI/CosaTWIslave/CosaTWIslave.ino
+Program:    4498 bytes (54.9% Full)
+Data:        213 bytes (41.6% Full)
+Tue Dec 6 15:09:47 CET 2016: examples/UART/CosaCDC/CosaCDC.ino
+CosaCDC.ino:31:2: error: #error CosaCDC: board not supported.
+ #error CosaCDC: board not supported.
+CosaCDC.ino:40:3: error: 'cdc' was not declared in this scope
+Tue Dec 6 15:09:48 CET 2016: examples/UART/CosaJobUART/CosaJobUART.ino
+CosaJobUART.ino:40:7: error: redefinition of 'class Soft::UART'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Soft/UART.hh:94:7: error: previous definition of 'class Soft::UART'
+CosaJobUART.ino:106:18: error: no 'void Soft::UART::on_expired()' member function declared in class 'Soft::UART'
+CosaJobUART.ino:125:31: error: 'D8' is not a member of 'Board'
+Tue Dec 6 15:09:48 CET 2016: examples/UART/CosaMegaUARTs/CosaMegaUARTs.ino
+CosaMegaUARTs.ino:30:2: error: #error CosaMegaUARTs: board not supported.
+ #error CosaMegaUARTs: board not supported.
+CosaMegaUARTs.ino:38:17: error: 'UART' was not declared in this scope
+CosaMegaUARTs.ino:38:36: error: template argument 1 is invalid
+CosaMegaUARTs.ino:38:42: error: invalid type in declaration before ';' token
+CosaMegaUARTs.ino:39:17: error: 'UART' was not declared in this scope
+CosaMegaUARTs.ino:39:36: error: template argument 1 is invalid
+CosaMegaUARTs.ino:39:42: error: invalid type in declaration before ';' token
+CosaMegaUARTs.ino:42:1: error: 'UART' does not name a type
+CosaMegaUARTs.ino:43:16: error: 'uart1' was not declared in this scope
+CosaMegaUARTs.ino:52:3: error: 'uart1' was not declared in this scope
+CosaMegaUARTs.ino:62:10: error: 'uart1' was not declared in this scope
+CosaMegaUARTs.ino:38:38: warning: 'ibuf' defined but not used [-Wunused-variable]
+CosaMegaUARTs.ino:39:38: warning: 'obuf' defined but not used [-Wunused-variable]
+Tue Dec 6 15:09:49 CET 2016: examples/UART/CosaSoftUART/CosaSoftUART.ino
+Program:    3076 bytes (37.5% Full)
+Data:        201 bytes (39.3% Full)
+Tue Dec 6 15:09:51 CET 2016: examples/UART/CosaUART/CosaUART.ino
+Program:    3590 bytes (43.8% Full)
+Data:         95 bytes (18.6% Full)
+Tue Dec 6 15:09:53 CET 2016: examples/UART/CosaUARTecho/CosaUARTecho.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:203:21: error: 'UART_MAX' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:74:11: error: 'UART' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:79:5: error: 'uart' was not declared in this scope
+Tue Dec 6 15:09:53 CET 2016: examples/Wireless/CosaWirelessButton/CosaWirelessButton.ino
+Program:    5456 bytes (66.6% Full)
+Data:        311 bytes (60.7% Full)
+Tue Dec 6 15:09:54 CET 2016: examples/Wireless/CosaWirelessDHT11/CosaWirelessDHT11.ino
+Program:    5262 bytes (64.2% Full)
+Data:        242 bytes (47.3% Full)
+Tue Dec 6 15:09:55 CET 2016: examples/Wireless/CosaWirelessDS18B20/CosaWirelessDS18B20.ino
+Program:    6332 bytes (77.3% Full)
+Data:        274 bytes (53.5% Full)
+Tue Dec 6 15:09:55 CET 2016: examples/Wireless/CosaWirelessIOStream/CosaWirelessIOStream.ino
+Program:    7028 bytes (85.8% Full)
+Data:        285 bytes (55.7% Full)
+Tue Dec 6 15:09:57 CET 2016: examples/Wireless/CosaWirelessMonitor/CosaWirelessMonitor.ino
+Program:    4588 bytes (56.0% Full)
+Data:        169 bytes (33.0% Full)
+Tue Dec 6 15:09:59 CET 2016: examples/Wireless/CosaWirelessPing/CosaWirelessPing.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:10:01 CET 2016: examples/Wireless/CosaWirelessPong/CosaWirelessPong.ino
+Program:    7622 bytes (93.0% Full)
+Data:        352 bytes (68.8% Full)
+Tue Dec 6 15:10:04 CET 2016: examples/Wireless/CosaWirelessReceiver/CosaWirelessReceiver.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:10:06 CET 2016: examples/Wireless/CosaWirelessReceiverLCD/CosaWirelessReceiverLCD.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:10:10 CET 2016: examples/Wireless/CosaWirelessRelay/CosaWirelessRelay.ino
+Program:    7060 bytes (86.2% Full)
+Data:        330 bytes (64.5% Full)
+Tue Dec 6 15:10:12 CET 2016: examples/Wireless/CosaWirelessSender/CosaWirelessSender.ino
+Program:    8156 bytes (99.6% Full)
+Data:        315 bytes (61.5% Full)
+Tue Dec 6 15:10:14 CET 2016: examples/Wireless/CosaWirelessTrace/CosaWirelessTrace.ino
+Program:    7862 bytes (96.0% Full)
+Data:        241 bytes (47.1% Full)
+Tue Dec 6 15:10:16 CET 2016: lib/Arduino-Libraries/Debug/examples/DebugDemo/DebugDemo.ino
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:55:29: error: expected class-name before '{' token
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:76:14: error: 'Stream' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:148:55: error: 'size_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:179:5: error: 'size_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:183:11: error: 'size_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:195:13: error: 'uint16_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:195:44: error: 'size_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:286:3: error: 'Stream' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:204:31: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:206:24: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:207:18: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:61:5: error: class 'Debug' does not have any field named 'Stream'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:62:5: error: class 'Debug' does not have any field named 'm_dev'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:62:11: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:153:7: error: class 'Debug::Variable' does not have any field named 'm_size'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:184:41: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:185:36: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:186:36: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:187:30: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:327:60: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:327:60: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:327:60: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+DebugDemo.ino:89:7: error: 'size_t' does not name a type
+DebugDemo.ino:90:13: error: 'NULL' was not declared in this scope
+DebugDemo.ino:95:3: error: 'Serial' was not declared in this scope
+DebugDemo.ino:97:40: error: 'F' was not declared in this scope
+DebugDemo.ino:114:24: error: 'BUF_MAX' was not declared in this scope
+DebugDemo.ino:114:31: error: 'malloc' was not declared in this scope
+DebugDemo.ino:115:28: error: 'memset' was not declared in this scope
+DebugDemo.ino:121:11: error: 'free' was not declared in this scope
+DebugDemo.ino:128:10: error: 'uint8_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+DebugDemo.ino:132:12: error: 'BUF_MAX' was not declared in this scope
+DebugDemo.ino:133:12: error: 'Serial' was not declared in this scope
+DebugDemo.ino:134:12: error: 'i' was not declared in this scope
+DebugDemo.ino:142:31: error: 'malloc' was not declared in this scope
+DebugDemo.ino:143:17: error: 'NULL' was not declared in this scope
+DebugDemo.ino:144:28: error: 'memset' was not declared in this scope
+DebugDemo.ino:150:12: error: 'delay' was not declared in this scope
+Tue Dec 6 15:10:16 CET 2016: lib/Arduino-Libraries/Periodic/examples/BlinkWithoutDelay/BlinkWithoutDelay.ino
+BlinkWithoutDelay.ino:26:22: fatal error: Periodic.h: No such file or directory
+Tue Dec 6 15:10:17 CET 2016: lib/Arduino-Libraries/Periodic/examples/PeriodicBlink/PeriodicBlink.ino
+PeriodicBlink.ino:22:22: fatal error: Periodic.h: No such file or directory
+Tue Dec 6 15:10:18 CET 2016: lib/Arduino-Libraries/Periodic/examples/PeriodicDemo/PeriodicDemo.ino
+PeriodicDemo.ino:22:22: fatal error: Periodic.h: No such file or directory
+Tue Dec 6 15:10:19 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerAlarmClock/SchedulerAlarmClock.ino
+SchedulerAlarmClock.ino:22:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:19 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBenchmarkChannel/SchedulerBenchmarkChannel.ino
+SchedulerBenchmarkChannel.ino:28:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:20 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBenchmarkQueue/SchedulerBenchmarkQueue.ino
+SchedulerBenchmarkQueue.ino:28:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:21 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBenchmark/SchedulerBenchmark.ino
+SchedulerBenchmark.ino:66:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:22 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBenchmarkSemaphore/SchedulerBenchmarkSemaphore.ino
+SchedulerBenchmarkSemaphore.ino:28:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:22 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBenchmarkSize/SchedulerBenchmarkSize.ino
+SchedulerBenchmarkSize.ino:33:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:23 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBlinkController/SchedulerBlinkController.ino
+SchedulerBlinkController.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:24 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBlinkMax/SchedulerBlinkMax.ino
+SchedulerBlinkMax.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:24 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBlink/SchedulerBlink.ino
+SchedulerBlink.ino:24:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:25 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBlinkTemplateClass/SchedulerBlinkTemplateClass.ino
+SchedulerBlinkTemplateClass.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:26 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerBlinkTemplateFunctions/SchedulerBlinkTemplateFunctions.ino
+SchedulerBlinkTemplateFunctions.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:27 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerChannel/SchedulerChannel.ino
+SchedulerChannel.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:27 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerDebounce/SchedulerDebounce.ino
+SchedulerDebounce.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:28 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerDebounceTemplate/SchedulerDebounceTemplate.ino
+SchedulerDebounceTemplate.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:29 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerDemoNamespaces/SchedulerDemoNamespaces.ino
+SchedulerDemoNamespaces.ino:24:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:30 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerDemo/SchedulerDemo.ino
+SchedulerDemo.ino:28:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:30 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerEventQueue/SchedulerEventQueue.ino
+SchedulerEventQueue.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:31 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerEvent/SchedulerEvent.ino
+SchedulerEvent.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:32 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerSemaphore/SchedulerSemaphore.ino
+SchedulerSemaphore.ino:24:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:33 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerTaskMax/SchedulerTaskMax.ino
+SchedulerTaskMax.ino:23:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:34 CET 2016: lib/Arduino-Libraries/Scheduler/examples/SchedulerWatchdogTemplate/SchedulerWatchdogTemplate.ino
+SchedulerWatchdogTemplate.ino:24:23: fatal error: Scheduler.h: No such file or directory
+Tue Dec 6 15:10:34 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellAnalogPins/ShellAnalogPins.ino
+ShellAnalogPins.ino:25:1: error: 'Shell' is not a template
+ShellAnalogPins.ino:25:15: error: 'Serial' was not declared in this scope
+ShellAnalogPins.ino:29:3: error: 'Serial' was not declared in this scope
+ShellAnalogPins.ino:37:38: error: 'F' was not declared in this scope
+Tue Dec 6 15:10:35 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellBenchmarks/ShellBenchmarks.ino
+ShellBenchmarks.ino:25:1: error: 'Shell' is not a template
+ShellBenchmarks.ino:25:20: error: 'Serial' was not declared in this scope
+ShellBenchmarks.ino:51:3: error: 'Serial' was not declared in this scope
+ShellBenchmarks.ino:53:46: error: 'F' was not declared in this scope
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:145:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:146:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:147:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:148:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:149:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:150:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:151:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:178:9: error: 'class Shell' has no member named 'set'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+ShellBenchmarks.ino:36:30: error: 'micros' was not declared in this scope
+ShellBenchmarks.ino:45:11: error: 'class Shell' has no member named 'print'
+Tue Dec 6 15:10:36 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellBlinkFrame/ShellBlinkFrame.ino
+ShellBlinkFrame.ino:26:1: error: 'Shell' is not a template
+ShellBlinkFrame.ino:26:20: error: 'Serial' was not declared in this scope
+ShellBlinkFrame.ino:30:3: error: 'Serial' was not declared in this scope
+ShellBlinkFrame.ino:32:46: error: 'F' was not declared in this scope
+ShellBlinkFrame.ino:33:9: error: 'class Shell' has no member named 'trace'
+ShellBlinkFrame.ino:42:9: error: 'class Shell' has no member named 'set'
+Tue Dec 6 15:10:37 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellBlink/ShellBlink.ino
+ShellBlink.ino:25:1: error: 'Shell' is not a template
+ShellBlink.ino:25:20: error: 'Serial' was not declared in this scope
+ShellBlink.ino:29:3: error: 'Serial' was not declared in this scope
+ShellBlink.ino:31:41: error: 'F' was not declared in this scope
+ShellBlink.ino:34:9: error: 'class Shell' has no member named 'trace'
+ShellBlink.ino:43:9: error: 'class Shell' has no member named 'set'
+Tue Dec 6 15:10:38 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellDemo/ShellDemo.ino
+ShellDemo.ino:31:7: error: expected constructor, destructor, or type conversion before '(' token
+ShellDemo.ino:36:7: error: expected constructor, destructor, or type conversion before '(' token
+ShellDemo.ino:43:7: error: expected constructor, destructor, or type conversion before '(' token
+ShellDemo.ino:45:7: error: 'script_t' does not name a type
+ShellDemo.ino:57:1: error: 'Shell' is not a template
+ShellDemo.ino:57:20: error: 'Serial' was not declared in this scope
+ShellDemo.ino:57:28: error: 'scripts' was not declared in this scope
+ShellDemo.ino:62:3: error: 'Serial' was not declared in this scope
+ShellDemo.ino:64:60: error: 'F' was not declared in this scope
+ShellDemo.ino:68:44: warning: deprecated conversion from string constant to 'char*' [-Wwrite-strings]
+ShellDemo.ino:72:9: error: 'class Shell' has no member named 'trace'
+ShellDemo.ino:78:13: error: 'class Shell' has no member named 'read'
+Tue Dec 6 15:10:39 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellMultiBlink/ShellMultiBlink.ino
+ShellMultiBlink.ino:26:1: error: 'Shell' is not a template
+ShellMultiBlink.ino:26:15: error: 'Serial' was not declared in this scope
+ShellMultiBlink.ino:30:3: error: 'Serial' was not declared in this scope
+ShellMultiBlink.ino:32:46: error: 'F' was not declared in this scope
+ShellMultiBlink.ino:43:9: error: 'class Shell' has no member named 'set'
+Tue Dec 6 15:10:39 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellScript/ShellScript.ino
+ShellScript.ino:29:7: error: expected constructor, destructor, or type conversion before '(' token
+ShellScript.ino:40:7: error: expected constructor, destructor, or type conversion before '(' token
+ShellScript.ino:43:7: error: 'script_t' does not name a type
+ShellScript.ino:50:1: error: 'Shell' is not a template
+ShellScript.ino:50:20: error: 'Serial' was not declared in this scope
+ShellScript.ino:50:28: error: 'scripts' was not declared in this scope
+ShellScript.ino:54:3: error: 'Serial' was not declared in this scope
+ShellScript.ino:56:42: error: 'F' was not declared in this scope
+ShellScript.ino:57:9: error: 'class Shell' has no member named 'trace'
+Tue Dec 6 15:10:40 CET 2016: lib/Arduino-Libraries/Shell/examples/ShellTrap/ShellTrap.ino
+ShellTrap.ino:25:9: error: 'Shell' is not a template
+ShellTrap.ino:28:23: error: expected ')' before '&' token
+ShellTrap.ino:33:5: error: 'm_ios' was not declared in this scope
+ShellTrap.ino:33:30: error: 'F' was not declared in this scope
+ShellTrap.ino:39:21: error: 'Serial' was not declared in this scope
+ShellTrap.ino:47:3: error: 'Serial' was not declared in this scope
+ShellTrap.ino:49:60: error: 'F' was not declared in this scope
+ShellTrap.ino:50:9: error: 'class ExtendedShell' has no member named 'trace'
+ShellTrap.ino:55:13: error: 'class ExtendedShell' has no member named 'read'
+Tue Dec 6 15:10:41 CET 2016: lib/Arduino-Libraries/Timemark/examples/MouseClick/MouseClick.ino
+MouseClick.ino:23:22: fatal error: Timemark.h: No such file or directory
+Tue Dec 6 15:10:42 CET 2016: lib/Arduino-Libraries/Timemark/examples/MultiBlinkArray/MultiBlinkArray.ino
+MultiBlinkArray.ino:24:22: fatal error: Timemark.h: No such file or directory
+Tue Dec 6 15:10:43 CET 2016: lib/Arduino-Libraries/Timemark/examples/MultiBlink/MultiBlink.ino
+MultiBlink.ino:23:22: fatal error: Timemark.h: No such file or directory
+Tue Dec 6 15:10:43 CET 2016: lib/Arduino-Libraries/Timemark/examples/PushButton/PushButton.ino
+PushButton.ino:23:22: fatal error: Timemark.h: No such file or directory
+Tue Dec 6 15:10:44 CET 2016: lib/AVR/examples/CosaISP/CosaISP.ino
+Program:    4174 bytes (51.0% Full)
+Data:         83 bytes (16.2% Full)
+Tue Dec 6 15:10:46 CET 2016: lib/AVR/examples/CosaProgrammer/CosaProgrammer.ino
+Program:    5334 bytes (65.1% Full)
+Data:        115 bytes (22.5% Full)
+Tue Dec 6 15:10:48 CET 2016: lib/Debug/examples/DebugDemo/DebugDemo.ino
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:55:29: error: expected class-name before '{' token
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:76:14: error: 'Stream' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:148:55: error: 'size_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:179:5: error: 'size_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:183:11: error: 'size_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:195:13: error: 'uint16_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:195:44: error: 'size_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:286:3: error: 'Stream' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:204:31: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:206:24: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:207:18: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:61:5: error: class 'Debug' does not have any field named 'Stream'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:62:5: error: class 'Debug' does not have any field named 'm_dev'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:62:11: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:153:7: error: class 'Debug::Variable' does not have any field named 'm_size'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:184:41: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:185:36: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:186:36: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:187:30: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:327:60: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:327:60: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:327:60: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+DebugDemo.ino:89:7: error: 'size_t' does not name a type
+DebugDemo.ino:90:13: error: 'NULL' was not declared in this scope
+DebugDemo.ino:95:3: error: 'Serial' was not declared in this scope
+DebugDemo.ino:97:40: error: 'F' was not declared in this scope
+DebugDemo.ino:114:24: error: 'BUF_MAX' was not declared in this scope
+DebugDemo.ino:114:31: error: 'malloc' was not declared in this scope
+DebugDemo.ino:115:28: error: 'memset' was not declared in this scope
+DebugDemo.ino:121:11: error: 'free' was not declared in this scope
+DebugDemo.ino:128:10: error: 'uint8_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+DebugDemo.ino:132:12: error: 'BUF_MAX' was not declared in this scope
+DebugDemo.ino:133:12: error: 'Serial' was not declared in this scope
+DebugDemo.ino:134:12: error: 'i' was not declared in this scope
+DebugDemo.ino:142:31: error: 'malloc' was not declared in this scope
+DebugDemo.ino:143:17: error: 'NULL' was not declared in this scope
+DebugDemo.ino:144:28: error: 'memset' was not declared in this scope
+DebugDemo.ino:150:12: error: 'delay' was not declared in this scope
+Tue Dec 6 15:10:49 CET 2016: lib/Domotica/RF433/DomoticaADXL345/DomoticaADXL345.ino
+Program:    7734 bytes (94.4% Full)
+Data:        320 bytes (62.5% Full)
+Tue Dec 6 15:10:51 CET 2016: lib/Domotica/RF433/DomoticaAnalogPin/DomoticaAnalogPin.ino
+Program:    4652 bytes (56.8% Full)
+Data:        195 bytes (38.1% Full)
+Tue Dec 6 15:10:53 CET 2016: lib/Domotica/RF433/DomoticaClock/DomoticaClock.ino
+Program:    5296 bytes (64.6% Full)
+Data:        271 bytes (52.9% Full)
+Tue Dec 6 15:10:55 CET 2016: lib/Domotica/RF433/DomoticaDHT11/DomoticaDHT11.ino
+Program:    5936 bytes (72.5% Full)
+Data:        246 bytes (48.0% Full)
+Tue Dec 6 15:10:57 CET 2016: lib/Domotica/RF433/DomoticaDigitalPin/DomoticaDigitalPin.ino
+Program:    4654 bytes (56.8% Full)
+Data:        195 bytes (38.1% Full)
+Tue Dec 6 15:10:58 CET 2016: lib/Domotica/RF433/DomoticaDigitalPins/DomoticaDigitalPins.ino
+Program:    4682 bytes (57.2% Full)
+Data:        194 bytes (37.9% Full)
+Tue Dec 6 15:11:00 CET 2016: lib/Domotica/RF433/DomoticaDS18B20/DomoticaDS18B20.ino
+Program:    6894 bytes (84.2% Full)
+Data:        241 bytes (47.1% Full)
+Tue Dec 6 15:11:02 CET 2016: lib/Domotica/RF433/DomoticaInfo/DomoticaInfo.ino
+Program:    4660 bytes (56.9% Full)
+Data:        194 bytes (37.9% Full)
+Tue Dec 6 15:11:04 CET 2016: lib/Domotica/RF433/DomoticaMonitor/DomoticaMonitor.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:07 CET 2016: lib/Domotica/RF433/DomoticaPins/DomoticaPins.ino
+Program:    4780 bytes (58.3% Full)
+Data:        196 bytes (38.3% Full)
+Tue Dec 6 15:11:09 CET 2016: lib/Domotica/RF433/DomoticaRelay/DomoticaRelay.ino
+Program:    4354 bytes (53.1% Full)
+Data:        244 bytes (47.7% Full)
+Tue Dec 6 15:11:11 CET 2016: lib/Domotica/RF433/DomoticaTrace/DomoticaTrace.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:14 CET 2016: lib/Domotica/RF433/DomoticaTraceQueue/DomoticaTraceQueue.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:16 CET 2016: lib/Domotica/RF433/DomoticaTraceTable/DomoticaTraceTable.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:19 CET 2016: lib/Domotica/RF433/DomoticaWakeup/DomoticaWakeup.ino
+Program:    4964 bytes (60.6% Full)
+Data:        220 bytes (43.0% Full)
+Tue Dec 6 15:11:21 CET 2016: lib/HTTP/examples/CosaPinWebServer/CosaPinWebServer.ino
+CosaPinWebServer.ino:191:1: error: 'W5100' does not name a type
+CosaPinWebServer.ino:217:10: error: 'ethernet' was not declared in this scope
+CosaPinWebServer.ino:220:23: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:22 CET 2016: lib/HTTP/examples/CosaSDWebServer/CosaSDWebServer.ino
+CosaSDWebServer.ino:124:1: error: 'W5100' does not name a type
+CosaSDWebServer.ino:149:10: error: 'ethernet' was not declared in this scope
+CosaSDWebServer.ino:150:23: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:23 CET 2016: lib/HTTP/examples/CosaWebClient/CosaWebClient.ino
+CosaWebClient.ino:66:1: error: 'W5100' does not name a type
+CosaWebClient.ino:125:10: error: 'ethernet' was not declared in this scope
+CosaWebClient.ino:127:16: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:24 CET 2016: lib/ICMP/examples/CosaICMPping/CosaICMPping.ino
+CosaICMPping.ino:68:1: error: 'W5100' does not name a type
+CosaICMPping.ino:85:10: error: 'ethernet' was not declared in this scope
+CosaICMPping.ino:92:13: error: 'ethernet' was not declared in this scope
+CosaICMPping.ino:111:29: error: 'SLEEP_MODE_EXT_STANDBY' was not declared in this scope
+Tue Dec 6 15:11:25 CET 2016: lib/ICMP/examples/CosaICMPpingLCD/CosaICMPpingLCD.ino
+CosaICMPpingLCD.ino:95:1: error: 'W5100' does not name a type
+CosaICMPpingLCD.ino:112:3: error: 'ethernet' was not declared in this scope
+CosaICMPpingLCD.ino:137:13: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:26 CET 2016: lib/MQTT/examples/CosaMQTTclient/CosaMQTTclient.ino
+CosaMQTTclient.ino:78:1: error: 'W5100' does not name a type
+CosaMQTTclient.ino:88:10: error: 'ethernet' was not declared in this scope
+CosaMQTTclient.ino:91:23: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:27 CET 2016: lib/MQTT/examples/CosaMQTThumidity/CosaMQTThumidity.ino
+CosaMQTThumidity.ino:72:1: error: 'W5100' does not name a type
+CosaMQTThumidity.ino:82:3: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:28 CET 2016: lib/MQTT/examples/CosaMQTTtemperature/CosaMQTTtemperature.ino
+CosaMQTTtemperature.ino:67:9: error: 'D7' is not a member of 'Board'
+CosaMQTTtemperature.ino:92:1: error: 'W5100' does not name a type
+CosaMQTTtemperature.ino:116:3: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:29 CET 2016: lib/NEXA/examples/CosaNEXAreceiver/CosaNEXAreceiver.ino
+Program:    3024 bytes (36.9% Full)
+Data:        154 bytes (30.1% Full)
+Tue Dec 6 15:11:31 CET 2016: lib/NEXA/examples/CosaNEXAsender/CosaNEXAsender.ino
+Program:    2490 bytes (30.4% Full)
+Data:         74 bytes (14.5% Full)
+Tue Dec 6 15:11:33 CET 2016: lib/NTP/examples/CosaNTP/CosaNTP.ino
+CosaNTP.ino:50:1: error: 'W5100' does not name a type
+CosaNTP.ino:101:10: error: 'ethernet' was not declared in this scope
+CosaNTP.ino:116:3: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:11:34 CET 2016: lib/ProtocolBuffer/examples/CosaProtocolBuffer/CosaProtocolBuffer.ino
+Program:    7068 bytes (86.3% Full)
+Data:        154 bytes (30.1% Full)
+Tue Dec 6 15:11:36 CET 2016: libraries/ADXL345/examples/CosaADXL345/CosaADXL345.ino
+Program:    6150 bytes (75.1% Full)
+Data:        203 bytes (39.6% Full)
+Tue Dec 6 15:11:38 CET 2016: libraries/AT24CXX/examples/CosaAT24CXX/CosaAT24CXX.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:40 CET 2016: libraries/Base64/examples/CosaBase64/CosaBase64.ino
+Program:    7818 bytes (95.4% Full)
+Data:        138 bytes (27.0% Full)
+Tue Dec 6 15:11:42 CET 2016: libraries/BMP085/examples/CosaBMP085/CosaBMP085.ino
+Program:    7430 bytes (90.7% Full)
+Data:        237 bytes (46.3% Full)
+Tue Dec 6 15:11:43 CET 2016: libraries/Canvas/examples/CosaCanvasBMP/CosaCanvasBMP.ino
+CosaCanvasBMP.ino:167:7: error: 'D8' is not a member of 'Board'
+Tue Dec 6 15:11:45 CET 2016: libraries/Canvas/examples/CosaCanvasClock/CosaCanvasClock.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:47 CET 2016: libraries/Canvas/examples/CosaCanvasDemo/CosaCanvasDemo.ino
+CosaCanvasDemo.ino:141:16: error: 'UART' was not declared in this scope
+Tue Dec 6 15:11:48 CET 2016: libraries/Canvas/examples/CosaCanvasFont/CosaCanvasFont.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:51 CET 2016: libraries/Canvas/examples/CosaCanvasFonts/CosaCanvasFonts.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:54 CET 2016: libraries/Canvas/examples/CosaCanvasHCSR04/CosaCanvasHCSR04.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:11:58 CET 2016: libraries/Canvas/examples/CosaCanvasHistogram/CosaCanvasHistogram.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:00 CET 2016: libraries/Canvas/examples/CosaCanvasPins/CosaCanvasPins.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:04 CET 2016: libraries/Canvas/examples/CosaCanvasScript/CosaCanvasScript.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:07 CET 2016: libraries/Canvas/examples/CosaCanvasShades/CosaCanvasShades.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:10 CET 2016: libraries/Canvas/examples/CosaCanvasSweep/CosaCanvasSweep.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:12 CET 2016: libraries/CC3000/examples/CosaCC3000demo/CosaCC3000demo.ino
+CosaCC3000demo.ino:37:1: error: 'CC3000' does not name a type
+CosaCC3000demo.ino:52:10: error: 'wifi' was not declared in this scope
+CosaCC3000demo.ino:71:12: error: 'wifi' was not declared in this scope
+CosaCC3000demo.ino:71:24: error: 'AF_INET' was not declared in this scope
+CosaCC3000demo.ino:71:33: error: 'SOCK_STREAM' was not declared in this scope
+CosaCC3000demo.ino:71:46: error: 'IPPROTO_TCP' was not declared in this scope
+CosaCC3000demo.ino:76:11: error: 'wifi' was not declared in this scope
+CosaCC3000demo.ino:81:11: error: 'wifi' was not declared in this scope
+CosaCC3000demo.ino:88:11: error: 'wifi' was not declared in this scope
+     res = wifi.select(sock + 1, readhndls, writehndls, errorhndls, 0, 50000);
+CosaCC3000demo.ino:93:13: error: 'wifi' was not declared in this scope
+CosaCC3000demo.ino:109:11: error: 'wifi' was not declared in this scope
+CosaCC3000demo.ino:114:3: error: 'wifi' was not declared in this scope
+Tue Dec 6 15:12:13 CET 2016: libraries/CC3000/examples/CosaCC3000info/CosaCC3000info.ino
+CosaCC3000info.ino:34:1: error: 'CC3000' does not name a type
+CosaCC3000info.ino:49:12: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:52:11: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:72:7: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:74:31: error: 'CC3000' has not been declared
+CosaCC3000info.ino:88:7: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:94:5: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:98:20: error: 'INET' has not been declared
+CosaCC3000info.ino:99:20: error: 'INET' has not been declared
+CosaCC3000info.ino:100:23: error: 'INET' has not been declared
+CosaCC3000info.ino:101:20: error: 'INET' has not been declared
+CosaCC3000info.ino:108:12: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:113:3: error: 'CC3000' has not been declared
+CosaCC3000info.ino:115:12: error: 'wifi' was not declared in this scope
+CosaCC3000info.ino:115:45: error: 'info' was not declared in this scope
+Tue Dec 6 15:12:14 CET 2016: libraries/CC3000/examples/CosaCC3000server/CosaCC3000server.ino
+CosaCC3000server.ino:40:1: error: 'CC3000' does not name a type
+CosaCC3000server.ino:58:10: error: 'wifi' was not declared in this scope
+CosaCC3000server.ino:62:3: error: 'wifi' was not declared in this scope
+CosaCC3000server.ino:64:19: error: 'INET' has not been declared
+CosaCC3000server.ino:65:24: error: 'INET' has not been declared
+CosaCC3000server.ino:69:26: error: 'AF_INET' was not declared in this scope
+CosaCC3000server.ino:69:35: error: 'SOCK_STREAM' was not declared in this scope
+CosaCC3000server.ino:69:48: error: 'IPPROTO_TCP' was not declared in this scope
+CosaCC3000server.ino:95:12: error: 'wifi' was not declared in this scope
+CosaCC3000server.ino:99:3: error: 'INET' has not been declared
+Tue Dec 6 15:12:15 CET 2016: libraries/CC3000/examples/CosaCC3000socket/CosaCC3000socket.ino
+CosaCC3000socket.ino:34:1: error: 'CC3000' does not name a type
+CosaCC3000socket.ino:45:3: error: 'wifi' was not declared in this scope
+CosaCC3000socket.ino:56:3: error: 'Socket' was not declared in this scope
+CosaCC3000socket.ino:56:11: error: 'socket' was not declared in this scope
+CosaCC3000socket.ino:61:14: error: 'wifi' was not declared in this scope
+CosaCC3000socket.ino:61:26: error: 'Socket' is not a class, namespace, or enumeration
+CosaCC3000socket.ino:68:18: error: 'wifi' was not declared in this scope
+CosaCC3000socket.ino:101:3: error: 'wifi' was not declared in this scope
+Tue Dec 6 15:12:16 CET 2016: libraries/CFFS/examples/CosaCFFS/CosaCFFS.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:19 CET 2016: libraries/CFFS/examples/CosaCFFSshell/CosaCFFSshell.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:22 CET 2016: libraries/Ciao/examples/CosaCiaoNative/CosaCiaoNative.ino
+Program:    5162 bytes (63.0% Full)
+Data:        190 bytes (37.1% Full)
+Tue Dec 6 15:12:24 CET 2016: libraries/Ciao/examples/CosaCiaoPoint/CosaCiaoPoint.ino
+Program:    4964 bytes (60.6% Full)
+Data:        158 bytes (30.9% Full)
+Tue Dec 6 15:12:26 CET 2016: libraries/Debug/examples/CosaDebug/CosaDebug.ino
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:55:29: error: expected class-name before '{' token
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:76:14: error: 'Stream' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:148:55: error: 'size_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:179:5: error: 'size_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:183:11: error: 'size_t' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:195:13: error: 'uint16_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:195:44: error: 'size_t' has not been declared
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:286:3: error: 'Stream' does not name a type
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:204:31: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:206:24: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:207:18: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:61:5: error: class 'Debug' does not have any field named 'Stream'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:62:5: error: class 'Debug' does not have any field named 'm_dev'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:62:11: error: 'NULL' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:153:7: error: class 'Debug::Variable' does not have any field named 'm_size'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:184:41: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:185:36: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:186:36: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:187:30: error: 'm_dev' was not declared in this scope
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/Types.h:187:39: error: conflicting declaration 'typedef const class prog_str* str_P'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:203:21: error: 'UART_MAX' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:74:11: error: 'UART' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:79:5: error: 'uart' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:365:13: error: 'class Debug' has no member named 'println'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:301:61: error: no matching function for call to 'Debug::begin(UART*, const char [14], int, const char [13])'
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+/home/epkmipl/Sketchbook/libraries/Debug/Debug.h:383:12: error: 'F' was not declared in this scope
+Tue Dec 6 15:12:27 CET 2016: libraries/DHCP/examples/CosaDHCP/CosaDHCP.ino
+CosaDHCP.ino:62:1: error: 'W5100' does not name a type
+CosaDHCP.ino:71:10: error: 'ethernet' was not declared in this scope
+CosaDHCP.ino:77:18: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:12:28 CET 2016: libraries/DHT/examples/CosaDHT/CosaDHT.ino
+Program:    6788 bytes (82.9% Full)
+Data:        248 bytes (48.4% Full)
+Tue Dec 6 15:12:30 CET 2016: libraries/DHT/examples/CosaDHTMAX72XX/CosaDHTMAX72XX.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:32 CET 2016: libraries/DNS/examples/CosaDNS/CosaDNS.ino
+CosaDNS.ino:64:1: error: 'W5100' does not name a type
+CosaDNS.ino:80:10: error: 'ethernet' was not declared in this scope
+CosaDNS.ino:87:20: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:12:33 CET 2016: libraries/DS1302/examples/CosaDS1302/CosaDS1302.ino
+Program:    5958 bytes (72.7% Full)
+Data:        121 bytes (23.6% Full)
+Tue Dec 6 15:12:35 CET 2016: libraries/DS1307/examples/CosaDS1307/CosaDS1307.ino
+Program:    7586 bytes (92.6% Full)
+Data:        248 bytes (48.4% Full)
+Tue Dec 6 15:12:36 CET 2016: libraries/DS18B20/examples/CosaDS18B20alarm/CosaDS18B20alarm.ino
+Program:    6472 bytes (79.0% Full)
+Data:        222 bytes (43.4% Full)
+Tue Dec 6 15:12:38 CET 2016: libraries/DS18B20/examples/CosaDS18B20calc/CosaDS18B20calc.ino
+Program:    5340 bytes (65.2% Full)
+Data:        104 bytes (20.3% Full)
+Tue Dec 6 15:12:40 CET 2016: libraries/DS18B20/examples/CosaDS18B20/CosaDS18B20.ino
+Program:    7038 bytes (85.9% Full)
+Data:        238 bytes (46.5% Full)
+Tue Dec 6 15:12:42 CET 2016: libraries/DS18B20/examples/CosaDS18B20periodic/CosaDS18B20periodic.ino
+Program:    7148 bytes (87.3% Full)
+Data:        265 bytes (51.8% Full)
+Tue Dec 6 15:12:44 CET 2016: libraries/DS2482/examples/CosaDS2482/CosaDS2482.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:46 CET 2016: libraries/DS3231/examples/CosaDS3231/CosaDS3231.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:12:49 CET 2016: libraries/Fai/examples/CosaFai/CosaFai.ino
+Program:    6160 bytes (75.2% Full)
+Data:        242 bytes (47.3% Full)
+Tue Dec 6 15:12:51 CET 2016: libraries/FAT16/examples/CosaBMP/CosaBMP.ino
+CosaBMP.ino:42:7: error: 'D10' is not a member of 'Board'
+Tue Dec 6 15:12:52 CET 2016: libraries/FAT16/examples/CosaFAT16/CosaFAT16.ino
+CosaFAT16.ino:50:7: error: 'D10' is not a member of 'Board'
+Tue Dec 6 15:12:53 CET 2016: libraries/FAT16/examples/CosaFAT16logger/CosaFAT16logger.ino
+CosaFAT16logger.ino:63:7: error: 'D10' is not a member of 'Board'
+Tue Dec 6 15:12:54 CET 2016: libraries/HCSR04/examples/CosaHCSR04/CosaHCSR04.ino
+Program:    4766 bytes (58.2% Full)
+Data:        223 bytes (43.6% Full)
+Tue Dec 6 15:12:56 CET 2016: libraries/HMC5883L/examples/CosaHMC5883L/CosaHMC5883L.ino
+Program:    6670 bytes (81.4% Full)
+Data:        213 bytes (41.6% Full)
+Tue Dec 6 15:12:58 CET 2016: libraries/IR/examples/CosaIR/CosaIR.ino
+Program:    6222 bytes (76.0% Full)
+Data:        339 bytes (66.2% Full)
+Tue Dec 6 15:12:59 CET 2016: libraries/L3G4200D/examples/CosaL3G4200D/CosaL3G4200D.ino
+Program:    5970 bytes (72.9% Full)
+Data:        203 bytes (39.6% Full)
+Tue Dec 6 15:13:01 CET 2016: libraries/MAX72XX/examples/CosaMAX72XX/CosaMAX72XX.ino
+Program:    6944 bytes (84.8% Full)
+Data:        143 bytes (27.9% Full)
+Tue Dec 6 15:13:03 CET 2016: libraries/MCP23008/examples/CosaMCP23008/CosaMCP23008.ino
+CosaMCP23008.ino:77:16: error: 'MAX_FREQ' is not a member of 'TWI'
+Tue Dec 6 15:13:04 CET 2016: libraries/MCP7940N/examples/CosaMCP7940N/CosaMCP7940N.ino
+Program:    7992 bytes (97.6% Full)
+Data:        245 bytes (47.9% Full)
+Tue Dec 6 15:13:06 CET 2016: libraries/MPU6050/examples/CosaMPU6050/CosaMPU6050.ino
+Program:    6422 bytes (78.4% Full)
+Data:        203 bytes (39.6% Full)
+Tue Dec 6 15:13:08 CET 2016: libraries/Nucleo/examples/CosaNucleoActor/CosaNucleoActor.ino
+Program:    8152 bytes (99.5% Full)
+Data:        388 bytes (75.8% Full)
+Tue Dec 6 15:13:08 CET 2016: libraries/Nucleo/examples/CosaNucleoBenchmark/CosaNucleoBenchmark.ino
+Program:    6492 bytes (79.2% Full)
+Data:        280 bytes (54.7% Full)
+Tue Dec 6 15:13:10 CET 2016: libraries/Nucleo/examples/CosaNucleoMutex/CosaNucleoMutex.ino
+Program:    5254 bytes (64.1% Full)
+Data:        243 bytes (47.5% Full)
+Tue Dec 6 15:13:12 CET 2016: libraries/Nucleo/examples/CosaNucleoPingPong/CosaNucleoPingPong.ino
+Program:    5896 bytes (72.0% Full)
+Data:        265 bytes (51.8% Full)
+Tue Dec 6 15:13:14 CET 2016: libraries/Nucleo/examples/CosaNucleoSemaphore/CosaNucleoSemaphore.ino
+Program:    5208 bytes (63.6% Full)
+Data:        243 bytes (47.5% Full)
+Tue Dec 6 15:13:16 CET 2016: libraries/Nucleo/examples/CosaNucleoSPI/CosaNucleoSPI.ino
+Program:    2714 bytes (33.1% Full)
+Data:        187 bytes (36.5% Full)
+Tue Dec 6 15:13:17 CET 2016: libraries/Nucleo/examples/CosaNucleoThread/CosaNucleoThread.ino
+Program:    6020 bytes (73.5% Full)
+Data:        321 bytes (62.7% Full)
+Tue Dec 6 15:13:19 CET 2016: libraries/OWI/examples/CosaDS1990A/CosaDS1990A.ino
+Program:    4802 bytes (58.6% Full)
+Data:        115 bytes (22.5% Full)
+Tue Dec 6 15:13:21 CET 2016: libraries/PCD8544/examples/CosaPCD8544/CosaPCD8544.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:13:23 CET 2016: libraries/PCD8544/examples/CosaPCD8544temp/CosaPCD8544temp.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:13:26 CET 2016: libraries/PCF8563/examples/CosaPCF8563/CosaPCF8563.ino
+Program:    7858 bytes (95.9% Full)
+Data:        219 bytes (42.8% Full)
+Tue Dec 6 15:13:28 CET 2016: libraries/PCF8574/examples/CosaPCF8574/CosaPCF8574.ino
+Program:    6674 bytes (81.5% Full)
+Data:        221 bytes (43.2% Full)
+Tue Dec 6 15:13:30 CET 2016: libraries/PCF8591/examples/CosaPCF8591/CosaPCF8591.ino
+Program:    6710 bytes (81.9% Full)
+Data:        231 bytes (45.1% Full)
+Tue Dec 6 15:13:32 CET 2016: libraries/ProtoThread/examples/CosaProtoThreadBenchmark/CosaProtoThreadBenchmark.ino
+Program:    6776 bytes (82.7% Full)
+Data:        282 bytes (55.1% Full)
+Tue Dec 6 15:13:34 CET 2016: libraries/RC4/examples/CosaRC4/CosaRC4.ino
+Program:    8150 bytes (99.5% Full)
+Data:        767 bytes (149.8% Full)
+Tue Dec 6 15:13:36 CET 2016: libraries/Registry/examples/CosaRegistry/CosaRegistry.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:13:38 CET 2016: libraries/Rotary/examples/CosaRotaryEncoder/CosaRotaryEncoder.ino
+Program:    4488 bytes (54.8% Full)
+Data:        208 bytes (40.6% Full)
+Tue Dec 6 15:13:40 CET 2016: libraries/RS485/examples/CosaRS485master/CosaRS485master.ino
+CosaRS485master.ino:33:2: error: #error CosaRS485master: board not supported.
+ #error CosaRS485master: board not supported.
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:203:21: error: 'UART_MAX' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:74:11: error: 'UART' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:79:5: error: 'uart' was not declared in this scope
+Tue Dec 6 15:13:41 CET 2016: libraries/RS485/examples/CosaRS485slave/CosaRS485slave.ino
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:203:21: error: 'UART_MAX' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:74:11: error: 'UART' is not a member of 'Board'
+/home/epkmipl/Sketchbook/hardware/Cosa/cores/cosa/Cosa/UART.hh:79:5: error: 'uart' was not declared in this scope
+Tue Dec 6 15:13:41 CET 2016: libraries/S25FL127S/examples/CosaS25FL127S/CosaS25FL127S.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:13:44 CET 2016: libraries/SD/examples/CosaSD/CosaSD.ino
+CosaSD.ino:70:7: error: 'D10' is not a member of 'Board'
+Tue Dec 6 15:13:45 CET 2016: libraries/Servo/examples/CosaServo/CosaServo.ino
+CosaServo.ino:43:16: error: 'D9' is not a member of 'Board'
+CosaServo.ino:44:15: error: 'D8' is not a member of 'Board'
+Tue Dec 6 15:13:46 CET 2016: libraries/Si70XX/examples/CosaSi7021/CosaSi7021.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:13:48 CET 2016: libraries/SRPO/examples/CosaSRPO/CosaSRPO.ino
+Program:    1466 bytes (17.9% Full)
+Data:         38 bytes (7.4% Full)
+Tue Dec 6 15:13:50 CET 2016: libraries/TCS230/examples/CosaTCS230/CosaTCS230.ino
+Program:    4430 bytes (54.1% Full)
+Data:        155 bytes (30.3% Full)
+Tue Dec 6 15:13:52 CET 2016: libraries/Touch/examples/CosaTouch/CosaTouch.ino
+Program:    4962 bytes (60.6% Full)
+Data:        245 bytes (47.9% Full)
+Tue Dec 6 15:13:54 CET 2016: libraries/Vigenere/examples/CosaVigenere/CosaVigenere.ino
+Program:    6702 bytes (81.8% Full)
+Data:        133 bytes (26.0% Full)
+Tue Dec 6 15:13:55 CET 2016: libraries/W25X40CL/examples/CosaW25X40CL/CosaW25X40CL.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:13:58 CET 2016: lib/Shell/examples/CosaShell/CosaShell.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:14:01 CET 2016: lib/Shell/examples/CosaShellTelnetServer/CosaShellTelnetServer.ino
+CosaShellTelnetServer.ino:111:1: error: 'W5100' does not name a type
+CosaShellTelnetServer.ino:143:10: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:14:02 CET 2016: lib/Shell/examples/CosaShellWebServer/CosaShellWebServer.ino
+CosaShellWebServer.ino:104:1: error: 'W5100' does not name a type
+CosaShellWebServer.ino:139:10: error: 'ethernet' was not declared in this scope
+CosaShellWebServer.ino:140:18: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:14:03 CET 2016: lib/SNMP/examples/CosaSNMP/CosaSNMP.ino
+CosaSNMP.ino:78:1: error: 'W5100' does not name a type
+CosaSNMP.ino:232:10: error: 'ethernet' was not declared in this scope
+CosaSNMP.ino:236:3: error: 'ethernet' was not declared in this scope
+CosaSNMP.ino:243:16: error: 'W5100' was not declared in this scope
+Tue Dec 6 15:14:04 CET 2016: lib/Telnet/examples/CosaTelnetServer/CosaTelnetServer.ino
+CosaTelnetServer.ino:69:1: error: 'W5100' does not name a type
+CosaTelnetServer.ino:84:10: error: 'ethernet' was not declared in this scope
+CosaTelnetServer.ino:87:18: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:14:05 CET 2016: lib/ThingSpeak/examples/CosaThingSpeakChannel/CosaThingSpeakChannel.ino
+CosaThingSpeakChannel.ino:75:1: error: 'W5100' does not name a type
+CosaThingSpeakChannel.ino:90:9: error: 'ethernet' was not declared in this scope
+CosaThingSpeakChannel.ino:91:22: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:14:06 CET 2016: lib/ThingSpeak/examples/CosaThingSpeakClient/CosaThingSpeakClient.ino
+CosaThingSpeakClient.ino:82:1: error: 'W5100' does not name a type
+CosaThingSpeakClient.ino:100:51: error: 'D15' is not a member of 'Board'
+CosaThingSpeakClient.ino:103:49: error: 'D15' is not a member of 'Board'
+CosaThingSpeakClient.ino:133:9: error: 'ethernet' was not declared in this scope
+CosaThingSpeakClient.ino:134:22: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:14:08 CET 2016: lib/ThingSpeak/examples/CosaThingSpeakTalkBack/CosaThingSpeakTalkBack.ino
+CosaThingSpeakTalkBack.ino:59:1: error: 'W5100' does not name a type
+CosaThingSpeakTalkBack.ino:153:9: error: 'ethernet' was not declared in this scope
+CosaThingSpeakTalkBack.ino:154:22: error: 'ethernet' was not declared in this scope
+Tue Dec 6 15:14:09 CET 2016: lib/UML/examples/CosaUMLBlink/CosaUMLBlink.ino
+Program:    2404 bytes (29.3% Full)
+Data:        216 bytes (42.2% Full)
+Tue Dec 6 15:14:10 CET 2016: lib/UML/examples/CosaUMLCapsules/CosaUMLCapsules.ino
+Program:    5842 bytes (71.3% Full)
+Data:        427 bytes (83.4% Full)
+Tue Dec 6 15:14:12 CET 2016: lib/UML/examples/CosaUMLPingPong/CosaUMLPingPong.ino
+Program:    4924 bytes (60.1% Full)
+Data:        279 bytes (54.5% Full)
+Tue Dec 6 15:14:14 CET 2016: lib/UML/examples/CosaUMLTermostat/CosaUMLTermostat.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:14:16 CET 2016: lib/UML/examples/CosaUMLThermometer/CosaUMLThermometer.ino
+collect2: error: ld returned 1 exit status
+Tue Dec 6 15:14:19 CET 2016: lib/UML/examples/CosaUMLTrigger/CosaUMLTrigger.ino
+Program:    5458 bytes (66.6% Full)
+Data:        358 bytes (69.9% Full)
+Tue Dec 6 15:14:21 CET 2016: lib/UML/examples/CosaUMLVoltmeter/CosaUMLVoltmeter.ino
+Program:    7802 bytes (95.2% Full)
+Data:        334 bytes (65.2% Full)
