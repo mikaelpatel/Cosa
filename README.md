@@ -32,8 +32,8 @@ Cosa API
 
 The API documentation is available:
 
-* [online](http://dl.dropbox.com/u/993383/Cosa/doc/html/index.html)
-* Compressed for [download](http://dl.dropbox.com/u/993383/Cosa/doc.zip).
+* [online](https://mikaelpatel.github.io/Cosa/index.html)
+* Compressed for [download](https://github.com/mikaelpatel/Cosa/releases)
 
 The documentation contains a full hyperlinked description of all functions
 in Cosa together with UML graphs of the class hierarchy, include dependencies,
