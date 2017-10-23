@@ -381,15 +381,13 @@ W5X00::Driver::disconnect()
   m_dev->issue(M_SREG(CR), CR_DISCON);
 
   // Wait for closure or timeout
-  while (m_dev->read(M_SREG(SR)) != SR_CLOSED)
-    {
-      if (m_dev->read(M_SREG(IR)) & IR_TIMEOUT)
-        {
-          close();
-          return (ETIME);
-        }
-      yield();
+  while (m_dev->read(M_SREG(SR)) != SR_CLOSED) {
+    if (m_dev->read(M_SREG(IR)) & IR_TIMEOUT ) {
+      close();
+      return (ETIME);
     }
+    yield();
+  }
 
   // Clear pending interrupts on socket
   m_dev->write(M_SREG(IR), 0xff);
