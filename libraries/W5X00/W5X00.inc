@@ -240,13 +240,16 @@ W5X00::Driver::flush()
 }
 
 int
-W5X00::Driver::open(Protocol proto, uint16_t port, uint8_t flag)
+W5X00::Driver::open(Protocol proto, uint16_t port, uint8_t flags)
 {
   // Check if the socket is already in use
   if (UNLIKELY(m_proto != 0)) return (EPROTO);
 
+  // Save flags
+  m_flags = flags & MR_FLAG_MASK;
+
   // Set protocol and port and issue open command
-  m_dev->write(M_SREG(MR), proto | (flag & MR_FLAG_MASK));
+  m_dev->write(M_SREG(MR), proto | m_flags);
   if (proto == IPRAW) {
     m_port = port;
     m_dev->write(M_SREG(PROTO), &port, sizeof(m_sreg->PROTO));
@@ -283,12 +286,19 @@ W5X00::Driver::close()
   // Check if the socket is not in use
   if (UNLIKELY(m_proto == 0)) return (EPROTO);
 
-  // Issue close command and clear pending interrupts on socket
+  // Issue close command
   m_dev->issue(M_SREG(CR), CR_CLOSE);
+
+  // Wait for close
+  while (m_dev->read(M_SREG(SR)) != SR_CLOSED) yield();
+
+  // Clear pending interrupts on socket
   m_dev->write(M_SREG(IR), 0xff);
 
   // Mark socket as not in use
   m_proto = 0;
+  m_server = false;
+
   return (0);
 }
 
@@ -298,7 +308,10 @@ W5X00::Driver::listen()
   // Check that the socket is in TCP mode
   if (UNLIKELY(m_proto != TCP)) return (EPROTO);
   m_dev->issue(M_SREG(CR), CR_LISTEN);
-  if (m_dev->read(M_SREG(SR)) == SR_LISTEN) return (0);
+  if (m_dev->read(M_SREG(SR)) == SR_LISTEN) {
+    m_server = true;
+    return (0);
+  }
   return (EFAULT);
 }
 
@@ -363,8 +376,32 @@ W5X00::Driver::disconnect()
 {
   // Check that the socket is in TCP mode
   if (UNLIKELY(m_proto != TCP)) return (EPROTO);
+
+  // Issue disconnect command
   m_dev->issue(M_SREG(CR), CR_DISCON);
-  dev_flush();
+
+  // Wait for closure or timeout
+  while (m_dev->read(M_SREG(SR)) != SR_CLOSED) {
+    if (m_dev->read(M_SREG(IR)) & IR_TIMEOUT ) {
+      close();
+      return (ETIME);
+    }
+    yield();
+  }
+
+  // Clear pending interrupts on socket
+  m_dev->write(M_SREG(IR), 0xff);
+
+  // If this was a server connection then reopen
+  if (m_server) {
+    Socket::Protocol proto = (Socket::Protocol) m_proto;
+
+    // Indicate closed so open works
+    m_proto = 0;
+
+    return (open(proto, m_port, m_flags));
+  }
+
   return (0);
 }
 
@@ -545,7 +582,7 @@ W5X00::end()
 }
 
 Socket*
-W5X00::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
+W5X00::socket(Socket::Protocol proto, uint16_t port, uint8_t flags)
 {
   // Lookup a free socket
   Driver* sock = NULL;
@@ -557,5 +594,5 @@ W5X00::socket(Socket::Protocol proto, uint16_t port, uint8_t flag)
   if (sock == NULL) return (NULL);
 
   // Open the socket and initiate
-  return (sock->open(proto, port, flag) ? NULL : sock);
+  return (sock->open(proto, port, flags) ? NULL : sock);
 }
