@@ -1,9 +1,9 @@
 /**
- * @file CosaGPIO.ino
+ * @file Cosa/Pin.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2015, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,37 +15,32 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Demonstrate Cosa GPIO digital pin access class.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/io/GPIO.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/UART.hh"
+#include "Pin.hh"
+#include "OutputPin.hh"
 
-GPIO led(Board::LED, GPIO::OUTPUT_MODE);
-GPIO button(Board::D4, GPIO::INPUT_MODE);
-
-void setup()
+uint8_t
+Pin::read(OutputPin& clk, Direction order) const
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
-  Watchdog::begin();
-  TRACE(led.mode());
-  TRACE(button.mode());
-  button.mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.mode());
-}
-
-void loop()
-{
-  if (button) {
-    ~led;
-    delay(1000);
-    ~led;
+  uint8_t value = 0;
+  uint8_t bits = CHARBITS;
+  if (order == MSB_FIRST) {
+    do {
+      value <<= 1;
+      if (is_set()) value |= 0x01;
+      clk.toggle();
+      clk.toggle();
+    } while (--bits);
   }
-  delay(1000);
+  else {
+    do {
+      value >>= 1;
+      if (is_set()) value |= 0x80;
+      clk.toggle();
+      clk.toggle();
+    } while (--bits);
+  }
+  return (value);
 }

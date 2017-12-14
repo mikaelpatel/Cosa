@@ -1,9 +1,9 @@
 /**
- * @file CosaGPIO.ino
+ * @file Cosa/Keypad.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2015, Mikael Patel
+ * Copyright (C) 2013-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,37 +15,27 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Demonstrate Cosa GPIO digital pin access class.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/io/GPIO.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/UART.hh"
+#include "Keypad.hh"
 
-GPIO led(Board::LED, GPIO::OUTPUT_MODE);
-GPIO button(Board::D4, GPIO::INPUT_MODE);
-
-void setup()
+void
+Keypad::Key::on_change(uint16_t value)
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
-  Watchdog::begin();
-  TRACE(led.mode());
-  TRACE(button.mode());
-  button.mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.mode());
+  uint8_t nr = 0;
+  while (value < (uint16_t) pgm_read_word(&m_map[nr])) nr++;
+  if (UNLIKELY(nr == m_latest)) return;
+  if (nr != 0)
+    m_keypad->on_key_down(nr);
+  else
+    m_keypad->on_key_up(m_latest);
+  m_latest = nr;
 }
 
-void loop()
+void
+Keypad::run()
 {
-  if (button) {
-    ~led;
-    delay(1000);
-    ~led;
-  }
-  delay(1000);
+  m_key.powerup();
+  m_key.sample_request(Event::SAMPLE_COMPLETED_TYPE);
 }

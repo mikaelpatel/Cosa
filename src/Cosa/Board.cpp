@@ -1,9 +1,9 @@
 /**
- * @file CosaGPIO.ino
+ * @file Cosa/Board.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2015, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,36 +16,21 @@
  * Lesser General Public License for more details.
  *
  * @section Description
- * Demonstrate Cosa GPIO digital pin access class.
+ * Cosa Board pin symbol definitions mapping to difference
+ * board/processor types. Board symbols are set by the build,
+ * e.g. -DARDUINO_UNO, and defined in the boards.txt configuration
+ * file.
  *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/io/GPIO.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/UART.hh"
+#include "Board.h"
 
-GPIO led(Board::LED, GPIO::OUTPUT_MODE);
-GPIO button(Board::D4, GPIO::INPUT_MODE);
+// Arduino Boards
+#if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#include "board/Mega.h"
+#elif defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__)
+#include "board/Uno.h"
+#endif
 
-void setup()
-{
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
-  Watchdog::begin();
-  TRACE(led.mode());
-  TRACE(button.mode());
-  button.mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.mode());
-}
 
-void loop()
-{
-  if (button) {
-    ~led;
-    delay(1000);
-    ~led;
-  }
-  delay(1000);
-}

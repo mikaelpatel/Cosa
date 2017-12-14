@@ -1,2 +1,0 @@
-#define LILYPAD_ARDUINO
-

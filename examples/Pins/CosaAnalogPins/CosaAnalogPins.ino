@@ -31,9 +31,9 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/OutputPin.hh"
-#include "Cosa/AnalogPin.hh"
-#include "Cosa/AnalogPins.hh"
+#include "Cosa/io/OutputPin.hh"
+#include "Cosa/io/AnalogPin.hh"
+#include "Cosa/io/AnalogPins.hh"
 #include "Cosa/Board.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"

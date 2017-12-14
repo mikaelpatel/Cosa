@@ -1,2 +1,0 @@
-#define BREADBOARD_ATTINYX61
-

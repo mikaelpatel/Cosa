@@ -1,9 +1,9 @@
 /**
- * @file CosaGPIO.ino
+ * @file Cosa/Event.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2015, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,37 +15,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Demonstrate Cosa GPIO digital pin access class.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/io/GPIO.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/UART.hh"
+#include "Event.hh"
+#include "Watchdog.hh"
 
-GPIO led(Board::LED, GPIO::OUTPUT_MODE);
-GPIO button(Board::D4, GPIO::INPUT_MODE);
+Queue<Event, Event::QUEUE_MAX> Event::queue;
 
-void setup()
+bool
+Event::service(uint32_t ms)
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
-  Watchdog::begin();
-  TRACE(led.mode());
-  TRACE(button.mode());
-  button.mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.mode());
-}
-
-void loop()
-{
-  if (button) {
-    ~led;
-    delay(1000);
-    ~led;
+  uint32_t start = Watchdog::millis();
+  Event event;
+  while (!queue.dequeue(&event)) {
+    if ((ms == 0L) || (Watchdog::since(start) < ms))
+      yield();
+    else
+      return (false);
   }
-  delay(1000);
+  event.dispatch();
+  return (true);
 }
+

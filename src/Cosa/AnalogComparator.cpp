@@ -1,9 +1,9 @@
 /**
- * @file CosaGPIO.ino
+ * @file Cosa/AnalogComparator.cpp
  * @version 1.0
  *
  * @section License
- * Copyright (C) 2015, Mikael Patel
+ * Copyright (C) 2012-2015, Mikael Patel
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,37 +15,21 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Demonstrate Cosa GPIO digital pin access class.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/io/GPIO.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/UART.hh"
+#include "AnalogComparator.hh"
 
-GPIO led(Board::LED, GPIO::OUTPUT_MODE);
-GPIO button(Board::D4, GPIO::INPUT_MODE);
+AnalogComparator* AnalogComparator::s_comparator = NULL;
 
-void setup()
+void
+AnalogComparator::on_interrupt(uint16_t arg)
 {
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
-  Watchdog::begin();
-  TRACE(led.mode());
-  TRACE(button.mode());
-  button.mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.mode());
+  Event::push(Event::CHANGE_TYPE, this, arg);
 }
 
-void loop()
+extern "C" ISR(ANALOG_COMP_vect)
 {
-  if (button) {
-    ~led;
-    delay(1000);
-    ~led;
-  }
-  delay(1000);
+  if (UNLIKELY(AnalogComparator::s_comparator == NULL)) return;
+  AnalogComparator::s_comparator->on_interrupt();
 }
