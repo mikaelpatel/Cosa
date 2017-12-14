@@ -1,10 +1,23 @@
+.idea/
+lib/README.md
+bin/
+files/
+cmake-build-debug/
+out/
+.idea_modules/
+*.iws
+
+.pioenvs
+.piolibdeps
+CMakeListsPrivate.txt
+
 *~
 arc
 build/boards.txt
-lib
 ref
 doc/html
 log/
 obj/
+
 
 

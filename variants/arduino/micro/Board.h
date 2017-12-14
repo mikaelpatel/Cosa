@@ -1,2 +1,0 @@
-#define ARDUINO_MICRO
-

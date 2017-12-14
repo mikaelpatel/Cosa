@@ -28,7 +28,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/InputCapture.hh"
+#include "Cosa/io/InputCapture.hh"
 #include "Cosa/RTT.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"

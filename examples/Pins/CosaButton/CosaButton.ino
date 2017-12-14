@@ -41,8 +41,8 @@
  */
 
 #include "Cosa/Button.hh"
-#include "Cosa/InputPin.hh"
-#include "Cosa/OutputPin.hh"
+#include "Cosa/io/InputPin.hh"
+#include "Cosa/io/OutputPin.hh"
 #include "Cosa/Event.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"

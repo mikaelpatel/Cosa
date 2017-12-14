@@ -1,5 +1,5 @@
 /**
- * @file CosaGPIO.ino
+ * @file Cosa/LCD_Keypad_map.cpp
  * @version 1.0
  *
  * @section License
@@ -15,37 +15,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * @section Description
- * Demonstrate Cosa GPIO digital pin access class.
- *
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/io/GPIO.hh"
-#include "Cosa/Watchdog.hh"
-#include "Cosa/Trace.hh"
-#include "Cosa/UART.hh"
+#include "LCD.hh"
 
-GPIO led(Board::LED, GPIO::OUTPUT_MODE);
-GPIO button(Board::D4, GPIO::INPUT_MODE);
-
-void setup()
-{
-  uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
-  Watchdog::begin();
-  TRACE(led.mode());
-  TRACE(button.mode());
-  button.mode(GPIO::PULLUP_INPUT_MODE);
-  TRACE(button.mode());
-}
-
-void loop()
-{
-  if (button) {
-    ~led;
-    delay(1000);
-    ~led;
-  }
-  delay(1000);
-}
+const uint16_t LCD::Keypad::m_map[] __PROGMEM = {
+  1000, 700, 400, 300, 100, 0
+};

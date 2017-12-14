@@ -21,7 +21,7 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/PinChangeInterrupt.hh"
+#include "Cosa/io/PinChangeInterrupt.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/RTT.hh"
 #include "Cosa/Periodic.hh"

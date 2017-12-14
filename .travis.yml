@@ -1,0 +1,29 @@
+ language: python
+ python:
+     - "2.7"
+
+ sudo: false
+ cache:
+     directories:
+         - "~/.platformio"
+
+ env:
+     - PLATFORMIO_CI_SRC=examples/Analyzer
+     - PLATFORMIO_CI_SRC=examples/Benchmarks
+     - PLATFORMIO_CI_SRC=examples/Blink
+     - PLATFORMIO_CI_SRC=examples/Build
+     - PLATFORMIO_CI_SRC=examples/Compiler
+     - PLATFORMIO_CI_SRC=examples/LCD
+     - PLATFORMIO_CI_SRC=examples/Pins
+     - PLATFORMIO_CI_SRC=examples/Sandbox
+     - PLATFORMIO_CI_SRC=examples/Time
+     - PLATFORMIO_CI_SRC=examples/Tools
+     - PLATFORMIO_CI_SRC=examples/TWI
+     - PLATFORMIO_CI_SRC=examples/UART
+     - PLATFORMIO_CI_SRC=examples/Wireless
+
+ install:
+     - pip install -U platformio
+
+ script:
+     - platformio ci --board=megaatmega2560 --board=uno

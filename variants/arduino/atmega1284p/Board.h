@@ -1,2 +1,0 @@
-#define BREADBOARD_ATMEGA1284P
-

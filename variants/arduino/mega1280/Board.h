@@ -1,4 +1,0 @@
-#define ARDUINO_MEGA
-#define ARDUINO_MEGA1280
-
-

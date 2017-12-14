@@ -21,12 +21,12 @@
  * This file is part of the Arduino Che Cosa project.
  */
 
-#include "Cosa/Pin.hh"
-#include "Cosa/InputPin.hh"
-#include "Cosa/OutputPin.hh"
-#include "Cosa/PWMPin.hh"
-#include "Cosa/AnalogPin.hh"
-#include "Cosa/PinChangeInterrupt.hh"
+#include "Cosa/io/Pin.hh"
+#include "Cosa/io/InputPin.hh"
+#include "Cosa/io/OutputPin.hh"
+#include "Cosa/io/PWMPin.hh"
+#include "Cosa/io/AnalogPin.hh"
+#include "Cosa/io/PinChangeInterrupt.hh"
 #include "Cosa/ExternalInterrupt.hh"
 #include "Cosa/Watchdog.hh"
 #include "Cosa/Trace.hh"
