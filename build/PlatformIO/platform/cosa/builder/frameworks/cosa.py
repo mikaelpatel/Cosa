@@ -18,6 +18,8 @@ https://github.com/mikaelpatel/Cosa/
 import os
 import string
 
+from __future__ import print_function
+
 from os import listdir, walk
 from os.path import isdir, isfile, join
 
@@ -44,10 +46,10 @@ lib_dirs = env.get("LIBSOURCE_DIRS")
 
 project_lib_dir = util.get_projectlib_dir()
 for _, subdirs, _ in walk(project_lib_dir):
-#  print "Adding project libraries:"
+#  print("Adding project libraries:")
   for dir in subdirs:
     lib_dirs.append(join(project_lib_dir, dir))
-#    print join(project_lib_dir, dir)
+#    print(join(project_lib_dir, dir))
   break
 
 # Cosa
@@ -57,10 +59,10 @@ lib_dirs.append(join(PLATFORMFW_DIR, "cores", BOARD_CORELIBDIRNAME))
 lib_dirs.append(join(PLATFORMFW_DIR, "variants", BOARD_VARIANTLIBDIRNAME))
 
 for _, subdirs, _ in walk(PLATFORMFW_LIBRARIES_DIR):
-#  print "Adding Cosa libraries:"
+#  print("Adding Cosa libraries:")
   for dir in subdirs:
     lib_dirs.append(join(PLATFORMFW_LIBRARIES_DIR, dir))
-#    print join(PLATFORMFW_LIBRARIES_DIR, dir)
+#    print(join(PLATFORMFW_LIBRARIES_DIR, dir))
   break
 
 # AVR
@@ -69,8 +71,8 @@ lib_dirs.append(join(TOOLCHAIN_DIR, "avr", "include"))
 env.Replace(PLATFORMFW_DIR=PLATFORMFW_DIR)
 env.Replace(LIBSOURCE_DIRS=lib_dirs)
 
-print "LIBSOURCE_DIRS"
-print lib_dirs
+print("LIBSOURCE_DIRS")
+print(lib_dirs)
 
 
 #
