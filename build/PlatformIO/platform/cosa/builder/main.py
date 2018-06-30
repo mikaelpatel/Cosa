@@ -16,6 +16,8 @@
     Builder for Atmel AVR series of microcontrollers
 """
 
+from __future__ import print_function
+
 from os.path import join
 from time import sleep
 

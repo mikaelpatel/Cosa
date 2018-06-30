@@ -119,7 +119,7 @@ elif os.name == 'posix':
     sys.exitfunc = cleanup_console      #terminal modes have to be restored on exit...
 
 else:
-    raise NotImplementedError, "Sorry no implementation for your platform (%s) available." % sys.platform
+    raise NotImplementedError("Sorry no implementation for your platform (%s) available." % sys.platform)
 
 
 CONVERT_CRLF = 2
