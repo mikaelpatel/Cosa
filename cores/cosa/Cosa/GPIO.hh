@@ -305,6 +305,7 @@ protected:
     return (m_sfr + 2);
   }
 
+public:
   /**
    * Return bit mask for given pin identity.
    * @param[in] pin identity.
