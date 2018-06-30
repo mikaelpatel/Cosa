@@ -32,7 +32,7 @@ GPIO button(Board::D4, GPIO::INPUT_MODE);
 void setup()
 {
   uart.begin(9600);
-  trace.begin(&uart, PSTR("CosaPIO: started"));
+  trace.begin(&uart, PSTR("CosaGPIO: started"));
   Watchdog::begin();
   TRACE(led.mode());
   TRACE(button.mode());
