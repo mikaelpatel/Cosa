@@ -157,11 +157,13 @@ TWI::isr_stop(State state, uint8_t type)
   if (UNLIKELY(state == TWI::ERROR_STATE)) m_count = -1;
   m_state = state;
 
-  // Check for asynchronous mode and call completion callback
-  if (m_dev->is_async() || m_status == SR_STOP) {
-    m_dev->on_completion(type, m_count);
+  // Call completion callback before setting to default states.
+  m_dev->on_completion(type, m_count);
+  m_busy = false;
+
+  // Set extra states to default for asynchronous mode.
+  if (m_dev->is_async()) {
     m_dev = NULL;
-    m_busy = false;
     TWCR = 0;
   }
 }
