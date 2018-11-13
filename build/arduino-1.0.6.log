@@ -1,60 +1,60 @@
-tis 13 nov 2018 15:36:14 WET: atmega328-8
+tis 13 nov 2018 16:43:09 WET: atmega328-8
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:16 WET: attiny84-8
+tis 13 nov 2018 16:43:11 WET: attiny84-8
 Program:     190 bytes (2.3% Full)
 Data:          1 bytes (0.2% Full)
-tis 13 nov 2018 15:36:18 WET: attiny85-8
+tis 13 nov 2018 16:43:12 WET: attiny85-8
 Program:     186 bytes (2.3% Full)
 Data:          1 bytes (0.2% Full)
-tis 13 nov 2018 15:36:19 WET: attiny861-8
+tis 13 nov 2018 16:43:14 WET: attiny861-8
 Program:     184 bytes (2.2% Full)
 Data:          1 bytes (0.2% Full)
-tis 13 nov 2018 15:36:21 WET: diecimila
+tis 13 nov 2018 16:43:15 WET: diecimila
 Program:     288 bytes (1.8% Full)
 Data:          1 bytes (0.1% Full)
-tis 13 nov 2018 15:36:23 WET: duemilanove
+tis 13 nov 2018 16:43:17 WET: duemilanove
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:24 WET: leonardo
+tis 13 nov 2018 16:43:19 WET: leonardo
 Program:    4492 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-tis 13 nov 2018 15:36:26 WET: lilypad
+tis 13 nov 2018 16:43:20 WET: lilypad
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:28 WET: lilypad-usb
+tis 13 nov 2018 16:43:22 WET: lilypad-usb
 Program:    4470 bytes (13.6% Full)
 Data:        189 bytes (7.4% Full)
-tis 13 nov 2018 15:36:30 WET: mega1280
+tis 13 nov 2018 16:43:23 WET: mega1280
 Program:     426 bytes (0.3% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:32 WET: mega2560
+tis 13 nov 2018 16:43:25 WET: mega2560
 Program:     430 bytes (0.2% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:33 WET: micro
+tis 13 nov 2018 16:43:26 WET: micro
 Program:    4470 bytes (13.6% Full)
 Data:        189 bytes (7.4% Full)
-tis 13 nov 2018 15:36:35 WET: mighty
-Program:     348 bytes (0.3% Full)
-Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:37 WET: mighty-opt
-Program:     348 bytes (0.3% Full)
-Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:38 WET: nano
+tis 13 nov 2018 16:43:28 WET: mighty
+Program:     348 bytes
+Data:          1 bytes
+tis 13 nov 2018 16:43:29 WET: mighty-opt
+Program:     348 bytes
+Data:          1 bytes
+tis 13 nov 2018 16:43:31 WET: nano
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:40 WET: pro-micro
+tis 13 nov 2018 16:43:32 WET: pro-micro
 Program:    4492 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-tis 13 nov 2018 15:36:42 WET: pro-micro-8
+tis 13 nov 2018 16:43:33 WET: pro-micro-8
 Program:    4492 bytes (13.7% Full)
 Data:        189 bytes (7.4% Full)
-tis 13 nov 2018 15:36:44 WET: pro-mini
+tis 13 nov 2018 16:43:35 WET: pro-mini
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:46 WET: pro-mini-8
+tis 13 nov 2018 16:43:36 WET: pro-mini-8
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
-tis 13 nov 2018 15:36:47 WET: uno
+tis 13 nov 2018 16:43:38 WET: uno
 Program:     298 bytes (0.9% Full)
 Data:          1 bytes (0.0% Full)
