@@ -191,13 +191,22 @@ typedef const PROGMEM class prog_str* str_P;
  * @param[in] s string literal (at compile time).
  * @return string literal in program memory.
  */
-#define STR_P(s)							\
-  (__extension__(							\
-    {									\
-      static const char __c[] __PROGMEM = (s);				\
-      (str_P) &__c[0];							\
-    }									\
-  ))
+#ifndef __INTELLISENSE__
+# define STR_P(s)							\
+   (__extension__(							\
+     {									\
+       static const char __c[] __PROGMEM = (s);				\
+       (str_P) &__c[0];							\
+     }									\
+   ))
+#else /* __INTELLISENSE__ */
+/*
+ * Provide plain string to Visual Studio's Intellisense, because
+ * it doesn't support statement expressions. This macro is used
+ * for syntax checking only and doesn't affect build.
+ */
+# define STR_P(s) (s)
+#endif /* __INTELLISENSE__ */
 #undef PSTR
 #define PSTR(s) STR_P(s)
 #define __PSTR(s) STR_P(s)
@@ -391,11 +400,6 @@ inline uint8_t lock(condvar_t &cond)
 struct iovec_t {
   void* buf;			//!< Buffer pointer.
   size_t size;			//!< Size of buffer in bytes.
-  iovec_t(void* buf = NULL, size_t size = 0)
-  {
-    this->buf = buf;
-    this->size = size;
-  }
 };
 
 /**
