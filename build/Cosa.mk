@@ -32,7 +32,16 @@ ARDMK_DIR = $(COSA_DIR)/build/Arduino-Makefile
 ARDUINO_CORE_PATH = $(COSA_DIR)/cores/cosa
 ARDUINO_VAR_PATH = $(COSA_DIR)/variants
 ARDUINO_LIB_PATH = $(COSA_DIR)/libraries
-BOARDS_TXT = $(COSA_DIR)/build/boards.txt
+ifndef BOARDS_TXT
+  BOARDS_TXT = $(COSA_DIR)/build/boards.txt
+endif
+ifeq ("$(wildcard $(BOARDS_TXT))", "")
+  $(shell cat $(COSA_DIR)/boards/*.txt > $(BOARDS_TXT))
+  BOARDS_TXT_MORE := $(wildcard $(ARDUINO_SKETCHBOOK)/hardware/*/boards.txt)
+  ifdef BOARDS_TXT_MORE
+     $(shell cat $BOARDS_TXT_MORE >> $(BOARDS_TXT))
+  endif
+endif
 
 MONITOR_CMD = $(COSA_DIR)/build/miniterm.py -q --lf
 
